@@ -15,19 +15,43 @@
             <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container">
                     <a class="navbar-brand" href="{{ url_for('home') }}">
-                        <img src="{{ url_for('static', filename='images/cat-logo.png') }}" alt="Cat Master Logo" class="logo-img">
                         <span>Cat Master</span>
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-auto">
+                        <ul class="navbar-nav">
                             <li class="nav-item">
                                 <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{{ url_for('home') }}">HOME</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if '/tutorial' in request.path %}active{% endif %}" href="{{ url_for('tutorial') }}">TUTORIAL</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle {% if '/tutorial' in request.path %}active{% endif %}" 
+                                   href="#" id="tutorialDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                   TUTORIAL
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="tutorialDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('tutorial_category', category='stressed-fearful') }}">
+                                            Stressed / Fearful
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('tutorial_category', category='painful-sick') }}">
+                                            Painful / Sick
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('tutorial_category', category='curious-playful') }}">
+                                            Curious / Playful
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('tutorial_category', category='happy-relaxed') }}">
+                                            Happy / Relaxed
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {% if '/quiz' in request.path %}active{% endif %}" href="{{ url_for('quiz') }}">QUIZ</a>
@@ -47,12 +71,7 @@
 
         <footer class="mt-5 py-3 text-center">
             <div class="container">
-                <p class="mb-0">© 2023 Cat Master - Cat Body Language Tutorial</p>
-                <div class="footer-cats">
-                    <img src="{{ url_for('static', filename='images/footer-cat1.png') }}" alt="Cute cat" class="footer-cat">
-                    <img src="{{ url_for('static', filename='images/footer-cat2.png') }}" alt="Cute cat" class="footer-cat">
-                    <img src="{{ url_for('static', filename='images/footer-cat3.png') }}" alt="Cute cat" class="footer-cat">
-                </div>
+                <p class="mb-0">©COMS4170 Final Project</p>
             </div>
         </footer>
     </div>

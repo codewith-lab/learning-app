@@ -52,7 +52,7 @@ def tutorial_category(category):
         return render_template('scenario.html', 
                               category=category, 
                               title=categories[category])
-    return render_template('tutorial.html')
+    return render_template('index.html')
 
 @app.route('/quiz')
 def quiz():

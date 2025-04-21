@@ -2,15 +2,15 @@
 
 /* Global Styles */
 :root {
-  --primary-color: #ff6b6b;
-  --secondary-color: #4ecdc4;
+  --primary-color: black;
+  --secondary-color: #576574;
   --accent-color: #ffbe76;
   --text-color: #576574;
   --light-color: #f7f1e3;
   --dark-color: #2c3e50;
   --success-color: #55efc4;
   --warning-color: #ffeaa7;
-  --danger-color: #ff7675;
+  --danger-color: black;
   --info-color: #74b9ff;
   --border-radius: 20px;
   --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -37,11 +37,14 @@ body {
 .kawaii-title {
   font-weight: 700;
   color: var(--primary-color);
-  text-shadow: 2px 2px 0 rgba(255, 107, 107, 0.2);
+  text-shadow: 2px 2px 0 var(--secondary-color);
+  padding-top: 3rem;
+  text-decoration: none;
 }
 
 .kawaii-subtitle {
-  font-weight: 500;
+  font-weight: 100;
+  font-size: 1.5rem;
   color: var(--secondary-color);
 }
 
@@ -100,11 +103,15 @@ body {
   transition: all 0.3s ease;
   background-color: white;
   margin-bottom: 20px;
+  margin-top: 40px;
 }
 
 .kawaii-card:hover {
-  transform: translateY(-10px);
   box-shadow: 0 15px 20px rgba(0, 0, 0, 0.1);
+}
+
+.kawaii-card-link {
+  text-decoration: none;
 }
 
 .kawaii-card-img {
@@ -116,11 +123,6 @@ body {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.kawaii-card:hover .kawaii-card-img img {
-  transform: scale(1.1);
 }
 
 .kawaii-card-body {
@@ -131,7 +133,8 @@ body {
 .kawaii-card-title {
   font-weight: 600;
   color: var(--primary-color);
-  margin-bottom: 10px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 /* Buttons */
@@ -320,7 +323,8 @@ body {
   position: relative;
   background-color: white;
   border-radius: 20px;
-  padding: 15px;
+  padding: 20px;
+  padding-top: 40px;
   margin-left: 15px;
   box-shadow: var(--box-shadow);
   flex-grow: 1;
@@ -611,7 +615,7 @@ footer {
   }
 
   .kawaii-subtitle {
-    font-size: 1.2rem;
+    font-size: 0.2rem;
   }
 
   .neko-teacher {

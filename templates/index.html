@@ -5,48 +5,44 @@
 {% block content %}
 <div class="home-container text-center">
     <div class="hero-section">
-        <h1 class="kawaii-title mb-4">Learn Cat Body Language</h1>
+        <h1 class="kawaii-title mb-4">Cat Body Language</h1>
         <h2 class="kawaii-subtitle mb-5">The Emotional Cat - Decoding Cat Clues Made Simple</h2>
         
-        <div class="neko-teacher">
-            <img src="{{ url_for('static', filename='images/neko-teacher.png') }}" alt="Neko Teacher" class="neko-teacher-img">
-            <div class="speech-bubble">
-                <p>Welcome to Master Cat! I'll teach you all about cat body language. Let's get started!</p>
-            </div>
-        </div>
     </div>
     
+    <div class="neko-teacher">
+        <img src="{{ url_for('static', filename='images/neko-teacher.png') }}" alt="Neko Teacher" class="neko-teacher-img">
+        <div class="speech-bubble">
+            <p>Welcome to Cat Master! My name is Coney. </p>
+            <p>I'll teach you all about cat body languages. Choose a scenario to get started!</p>
+        </div>
+    </div>
+
     <div class="row cat-categories mt-5">
+        <div class="col-md-3 mb-4"></div>
         <div class="col-md-3 mb-4">
-            <a href="{{ url_for('tutorial_category', category='stressed-fearful') }}" class="category-card">
+            <a href="{{ url_for('tutorial_category', category='stressed-fearful') }}" class="kawaii-card-link">
                 <div class="kawaii-card">
-                    <div class="kawaii-card-img">
-                        <img src="{{ url_for('static', filename='images/stressed-cat.png') }}" alt="Stressed/Fearful Cat">
-                    </div>
                     <div class="kawaii-card-body">
                         <h5 class="kawaii-card-title">Stressed / Fearful</h5>
                     </div>
-                </div>
+                </div> 
             </a>
         </div>
         <div class="col-md-3 mb-4">
-            <a href="{{ url_for('tutorial_category', category='painful-sick') }}" class="category-card">
+            <a href="{{ url_for('tutorial_category', category='painful-sick') }}" class="kawaii-card-link">
                 <div class="kawaii-card">
-                    <div class="kawaii-card-img">
-                        <img src="{{ url_for('static', filename='images/sick-cat.png') }}" alt="Painful/Sick Cat">
-                    </div>
                     <div class="kawaii-card-body">
                         <h5 class="kawaii-card-title">Painful / Sick</h5>
                     </div>
                 </div>
             </a>
         </div>
+        <div class="col-md-3 mb-4"></div>
+        <div class="col-md-3 mb-4"></div>
         <div class="col-md-3 mb-4">
-            <a href="{{ url_for('tutorial_category', category='curious-playful') }}" class="category-card">
+            <a href="{{ url_for('tutorial_category', category='curious-playful') }}" class="kawaii-card-link">
                 <div class="kawaii-card">
-                    <div class="kawaii-card-img">
-                        <img src="{{ url_for('static', filename='images/playful-cat.png') }}" alt="Curious/Playful Cat">
-                    </div>
                     <div class="kawaii-card-body">
                         <h5 class="kawaii-card-title">Curious / Playful</h5>
                     </div>
@@ -54,22 +50,16 @@
             </a>
         </div>
         <div class="col-md-3 mb-4">
-            <a href="{{ url_for('tutorial_category', category='happy-relaxed') }}" class="category-card">
+            <a href="{{ url_for('tutorial_category', category='happy-relaxed') }}" class="kawaii-card-link">
                 <div class="kawaii-card">
-                    <div class="kawaii-card-img">
-                        <img src="{{ url_for('static', filename='images/happy-cat.png') }}" alt="Happy/Relaxed Cat">
-                    </div>
                     <div class="kawaii-card-body">
                         <h5 class="kawaii-card-title">Happy / Relaxed</h5>
                     </div>
                 </div>
             </a>
         </div>
+        <div class="col-md-3 mb-4"></div>
     </div>
     
-    <div class="action-buttons mt-4">
-        <a href="{{ url_for('tutorial') }}" class="kawaii-button primary-button">Start Learning</a>
-        <a href="{{ url_for('quiz') }}" class="kawaii-button secondary-button">Take Quiz</a>
-    </div>
 </div>
 {% endblock %}
