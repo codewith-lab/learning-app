@@ -1,0 +1,131 @@
+/* Global Styles */
+body {
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: #3a86ff;
+}
+
+.nav-link {
+  font-weight: 500;
+}
+
+.nav-link.active {
+  color: #3a86ff !important;
+  border-bottom: 2px solid #3a86ff;
+}
+
+/* Home Page */
+.home-container,
+.tutorial-container {
+  padding: 2rem 0;
+}
+
+.category-card {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+}
+
+.category-card .card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-card .card-title {
+  font-weight: bold;
+  color: #3a86ff;
+}
+
+/* Scenario Pages */
+.scenario-navigation,
+.quiz-navigation {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.scenario-content,
+.quiz-content {
+  padding: 1rem 0;
+}
+
+/* Quiz Pages */
+.draggable-item {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  cursor: move;
+}
+
+.draggable-item.dragging {
+  opacity: 0.5;
+}
+
+.draggable-item.correct {
+  background-color: #d4edda;
+}
+
+.draggable-item.incorrect {
+  background-color: #f8d7da;
+}
+
+.drag-over {
+  background-color: #e2e3e5;
+}
+
+/* Interactive Elements */
+.cat-interactive {
+  position: relative;
+}
+
+.hotspot {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.hotspot:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.cat-petting img {
+  cursor: pointer;
+  transition: filter 0.3s ease;
+}
+
+.food-items {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.food-item {
+  width: 50px;
+  height: 50px;
+  cursor: move;
+}
+
+/* About Page */
+.about-container {
+  padding: 2rem 0;
+}

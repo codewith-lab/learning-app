@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}Quiz{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <div class="quiz-navigation mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="kawaii-breadcrumb">
+                <a href="{{ url_for('home') }}" class="kawaii-link">HOME</a> &gt;
+                <a href="{{ url_for('tutorial') }}" class="kawaii-link">SCENARIO</a> &gt;
+                <a href="{{ url_for('quiz') }}" class="kawaii-link">QUIZ</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-content text-center">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{{ url_for('tutorial') }}" class="kawaii-button back-button">&lt; Go Back</a>
+            <div class="kawaii-pagination">Quiz &gt; <a href="{{ url_for('quiz_part', part='part1') }}" class="kawaii-link">Next</a></div>
+        </div>
+
+        <div class="kawaii-panel p-5">
+            <div class="neko-teacher mb-4">
+                <img src="{{ url_for('static', filename='images/neko-quiz.png') }}" alt="Quiz Neko" class="neko-teacher-img">
+                <div class="speech-bubble">
+                    <p>Let's see how well you understand cat body language! Are you ready for the quiz?</p>
+                </div>
+            </div>
+            
+            <h2 class="kawaii-title mb-4">Quiz Time!</h2>
+            <h3 class="kawaii-subtitle">Ready?</h3>
+            <div class="mt-4">
+                <a href="{{ url_for('quiz_part', part='part1') }}" class="kawaii-button primary-button">Start Quiz</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

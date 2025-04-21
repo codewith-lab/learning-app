@@ -1,0 +1,512 @@
+{% extends "layout.html" %}
+
+{% block title %}Quiz - {{ part }}{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <div class="quiz-navigation mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="kawaii-breadcrumb">
+                <a href="{{ url_for('home') }}" class="kawaii-link">HOME</a> &gt;
+                <a href="{{ url_for('tutorial') }}" class="kawaii-link">SCENARIO</a> &gt;
+                <a href="{{ url_for('quiz') }}" class="kawaii-link">QUIZ</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{{ url_for('quiz') }}" class="kawaii-button back-button">&lt; Go Back</a>
+            <div class="kawaii-pagination">Quiz &gt; {{ part }} &gt; <a href="#" class="kawaii-link next-part">Next</a></div>
+        </div>
+
+        {% if part == 'part1' %}
+            <div class="kawaii-panel mb-4">
+                <div class="kawaii-panel-header">
+                    <h3>1. Drag Each Body Language to the Correct Emotional Bin</h3>
+                </div>
+                <div class="kawaii-panel-body">
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="kawaii-panel success mb-3">
+                                <div class="kawaii-panel-header">
+                                    <h5>Positive</h5>
+                                </div>
+                                <div class="kawaii-panel-body" id="positive-bin">
+                                    <div class="draggable-item" draggable="true" data-correct="positive">An upright tail with a curled tip</div>
+                                    <div class="draggable-item" draggable="true" data-correct="positive">Slowly blinking</div>
+                                    <div class="draggable-item" draggable="true" data-correct="positive">Rolling onto its back</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="kawaii-panel danger mb-3">
+                                <div class="kawaii-panel-header">
+                                    <h5>Negative</h5>
+                                </div>
+                                <div class="kawaii-panel-body" id="negative-bin">
+                                    <div class="draggable-item" draggable="true" data-correct="negative">A puffed-up tail</div>
+                                    <div class="draggable-item" draggable="true" data-correct="negative">Ears pinned flat backward</div>
+                                    <div class="draggable-item" draggable="true" data-correct="negative">Flicking the tip of tail while lying down</div>
+                                    <div class="draggable-item" draggable="true" data-correct="negative">Arched back, sideways stance</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 draggable-items-container">
+                        <div class="draggable-item" draggable="true" data-correct="positive">A rapid chirp or trill while observing birds through a window</div>
+                    </div>
+                    
+                    <div class="neko-teacher mt-4">
+                        <img src="{{ url_for('static', filename='images/neko-thinking.png') }}" alt="Thinking Neko" class="neko-teacher-img small">
+                        <div class="speech-bubble">
+                            <p>Drag each behavior to the correct emotional bin! Is it a positive or negative sign?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <button class="kawaii-button info-button" id="review-btn">Get Stuck? Click to Review!</button>
+                        <button class="kawaii-button primary-button" id="submit-btn">Submit</button>
+                    </div>
+                    
+                    <div class="mt-4 feedback-area" style="display: none;">
+                        <div class="kawaii-alert info">
+                            <div class="alert-icon">💡</div>
+                            <div class="alert-content">
+                                <ul class="kawaii-list">
+                                    <li>Flicking the tip of tail while lying down is a sign of anxiety</li>
+                                    <li>A rapid chirp or trill while observing birds through a window is a sign of excitement and playfulness</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% elif part == 'part2' %}
+            <div class="kawaii-panel mb-4">
+                <div class="kawaii-panel-header">
+                    <h3>Multiple Choice Questions</h3>
+                </div>
+                <div class="kawaii-panel-body">
+                    <form id="quiz-form">
+                        <div class="mb-4 question-container">
+                            <h5 class="kawaii-subtitle">2. Kneading ("making biscuits") is a behavior cats learn from</h5>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question2" id="q2a" value="a" data-correct="false">
+                                <label class="kawaii-radio-label" for="q2a">A. Their siblings</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question2" id="q2b" value="b" data-correct="true">
+                                <label class="kawaii-radio-label" for="q2b">B. Their mother while nursing</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question2" id="q2c" value="c" data-correct="false">
+                                <label class="kawaii-radio-label" for="q2c">C. Watching humans bake</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question2" id="q2d" value="d" data-correct="false">
+                                <label class="kawaii-radio-label" for="q2d">D. Trying to fluff blankets</label>
+                            </div>
+                            <button type="button" class="kawaii-button info-button mt-2 review-btn">Get Stuck? Click to Review!</button>
+                        </div>
+                        
+                        <div class="mb-4 question-container">
+                            <h5 class="kawaii-subtitle">3. A cat is crouched low, tail tucked, and staring. What's their likely emotion?</h5>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question3" id="q3a" value="a" data-correct="false">
+                                <label class="kawaii-radio-label" for="q3a">A. Playful</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question3" id="q3b" value="b" data-correct="true">
+                                <label class="kawaii-radio-label" for="q3b">B. Fearful</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question3" id="q3c" value="c" data-correct="false">
+                                <label class="kawaii-radio-label" for="q3c">C. Happy</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question3" id="q3d" value="d" data-correct="false">
+                                <label class="kawaii-radio-label" for="q3d">D. Bored</label>
+                            </div>
+                            <button type="button" class="kawaii-button info-button mt-2 review-btn">Get Stuck? Click to Review!</button>
+                            
+                            <div class="feedback mt-3" style="display: none;">
+                                <div class="kawaii-alert info">
+                                    <div class="alert-icon">💡</div>
+                                    <div class="alert-content">
+                                        <p>Correct answer is B. A low crouch with a tucked tail typically indicates I feel threatened or scared. This is a defensive posture, preparing to flee or protect itself.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 question-container">
+                            <h5 class="kawaii-subtitle">4. A cat exposed to fireworks shows severe stress: panting, drooling, and frantic scratching at walls. Which intervention is LEAST appropriate?</h5>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question4" id="q4a" value="a" data-correct="false">
+                                <label class="kawaii-radio-label" for="q4a">A. Confine them to a quiet room with white noise</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question4" id="q4b" value="b" data-correct="false">
+                                <label class="kawaii-radio-label" for="q4b">B. Use a Feliway diffuser and familiar bedding</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question4" id="q4c" value="c" data-correct="true">
+                                <label class="kawaii-radio-label" for="q4c">C. Hold the cat tightly to your chest to "comfort" them</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question4" id="q4d" value="d" data-correct="false">
+                                <label class="kawaii-radio-label" for="q4d">D. Spray some treats around the cat</label>
+                            </div>
+                            <button type="button" class="kawaii-button info-button mt-2 review-btn">Get Stuck? Click to Review!</button>
+                        </div>
+                        
+                        <div class="mb-4 question-container">
+                            <h5 class="kawaii-subtitle">5. A purring cat is curled in your lap. Which scenario suggests the purring may indicate STRESS rather than contentment?</h5>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question5" id="q5a" value="a" data-correct="true">
+                                <label class="kawaii-radio-label" for="q5a">A. Purring during a vet visit with dilated pupils</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question5" id="q5b" value="b" data-correct="false">
+                                <label class="kawaii-radio-label" for="q5b">B. Purring while kneading a soft blanket</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question5" id="q5c" value="c" data-correct="false">
+                                <label class="kawaii-radio-label" for="q5c">C. Purring with half-closed eyes and a relaxed posture</label>
+                            </div>
+                            <div class="kawaii-radio">
+                                <input class="kawaii-radio-input" type="radio" name="question5" id="q5d" value="d" data-correct="false">
+                                <label class="kawaii-radio-label" for="q5d">D. Purring after a play session</label>
+                            </div>
+                            <button type="button" class="kawaii-button info-button mt-2 review-btn">Get Stuck? Click to Review!</button>
+                        </div>
+                        
+                        <div class="neko-teacher mt-4 mb-4">
+                            <img src="{{ url_for('static', filename='images/neko-quiz.png') }}" alt="Quiz Neko" class="neko-teacher-img small">
+                            <div class="speech-bubble">
+                                <p>Choose your answers carefully! Remember what you learned in the tutorial.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="kawaii-button primary-button">Submit</button>
+                        </div>
+                    </form>
+                    
+                    <div class="interactive-questions mt-5">
+                        <div class="kawaii-panel mb-3">
+                            <div class="kawaii-panel-header">
+                                <h5>What part of the cat is responsible for showing fear?</h5>
+                            </div>
+                            <div class="kawaii-panel-body">
+                                <div class="cat-interactive">
+                                    <img src="{{ url_for('static', filename='images/cat-parts.png') }}" class="img-fluid" alt="Cat body parts">
+                                    <div class="hotspots">
+                                        <div class="hotspot" data-target="ears" data-correct="true" style="top: 20%; left: 30%"></div>
+                                        <div class="hotspot" data-target="tail" data-correct="true" style="top: 60%; left: 80%"></div>
+                                        <div class="hotspot" data-target="eyes" data-correct="true" style="top: 25%; left: 40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="kawaii-panel mb-3">
+                            <div class="kawaii-panel-header">
+                                <h5>Pet the cat to calm it down!</h5>
+                            </div>
+                            <div class="kawaii-panel-body">
+                                <div class="cat-petting">
+                                    <img src="{{ url_for('static', filename='images/pet-cat.png') }}" class="img-fluid" alt="Pet the cat">
+                                    <div class="pet-spots">
+                                        <div class="pet-spot" data-spot="head" data-correct="true" style="top: 25%; left: 40%"></div>
+                                        <div class="pet-spot" data-spot="back" data-correct="true" style="top: 40%; left: 60%"></div>
+                                        <div class="pet-spot" data-spot="belly" data-correct="false" style="top: 60%; left: 50%"></div>
+                                    </div>
+                                </div>
+                                <div class="pet-feedback mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="kawaii-panel mb-3">
+                            <div class="kawaii-panel-header">
+                                <h5>The cat looks really happy - what part of the body goes up when the cat is excited?</h5>
+                            </div>
+                            <div class="kawaii-panel-body">
+                                <div class="cat-interactive">
+                                    <img src="{{ url_for('static', filename='images/happy-cat-quiz.png') }}" class="img-fluid" alt="Happy cat">
+                                    <div class="hotspots">
+                                        <div class="hotspot" data-target="tail" data-correct="true" style="top: 40%; left: 80%"></div>
+                                        <div class="hotspot" data-target="ears" data-correct="true" style="top: 20%; left: 30%"></div>
+                                        <div class="hotspot" data-target="back" data-correct="false" style="top: 40%; left: 50%"></div>
+                                    </div>
+                                </div>
+                                <div class="happy-feedback mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="kawaii-panel mb-3">
+                            <div class="kawaii-panel-header">
+                                <h5>Give the cat some food to make it relax!</h5>
+                            </div>
+                            <div class="kawaii-panel-body">
+                                <div class="cat-feeding">
+                                    <img src="{{ url_for('static', filename='images/feed-cat.png') }}" class="img-fluid" alt="Feed the cat">
+                                    <div class="food-items">
+                                        <img src="{{ url_for('static', filename='images/treat.png') }}" class="food-item" alt="Cat treat" draggable="true" data-food="treat" data-correct="true">
+                                        <img src="{{ url_for('static', filename='images/toy.png') }}" class="food-item" alt="Cat toy" draggable="true" data-food="toy" data-correct="false">
+                                    </div>
+                                </div>
+                                <div class="feed-feedback mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('quiz_result') }}" class="kawaii-button primary-button finish-quiz" style="display: none;">Finish Quiz</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Store answers for submission
+        let userAnswers = {};
+        
+        // Drag and drop functionality for quiz part 1
+        $('.draggable-item').on('dragstart', function(e) {
+            e.originalEvent.dataTransfer.setData('text/plain', $(this).index());
+            $(this).addClass('dragging');
+        });
+        
+        $('.draggable-item').on('dragend', function() {
+            $(this).removeClass('dragging');
+        });
+        
+        $('#positive-bin, #negative-bin').on('dragover', function(e) {
+            e.preventDefault();
+            $(this).addClass('drag-over');
+        });
+        
+        $('#positive-bin, #negative-bin').on('dragleave', function() {
+            $(this).removeClass('drag-over');
+        });
+        
+        $('#positive-bin, #negative-bin').on('drop', function(e) {
+            e.preventDefault();
+            $(this).removeClass('drag-over');
+            
+            const itemIndex = e.originalEvent.dataTransfer.getData('text/plain');
+            const $item = $('.draggable-item').eq(itemIndex);
+            
+            $(this).append($item);
+        });
+        
+        // Submit button for quiz part 1
+        $('#submit-btn').on('click', function() {
+            // Check answers
+            let correctCount = 0;
+            let totalCount = 0;
+            
+            $('#positive-bin .draggable-item').each(function() {
+                totalCount++;
+                if ($(this).data('correct') === 'positive') {
+                    $(this).addClass('correct').append(' ✅');
+                    correctCount++;
+                    userAnswers['drag_' + $(this).text()] = true;
+                } else {
+                    $(this).addClass('incorrect').append(' ❌');
+                    userAnswers['drag_' + $(this).text()] = false;
+                }
+            });
+            
+            $('#negative-bin .draggable-item').each(function() {
+                totalCount++;
+                if ($(this).data('correct') === 'negative') {
+                    $(this).addClass('correct').append(' ✅');
+                    correctCount++;
+                    userAnswers['drag_' + $(this).text()] = true;
+                } else {
+                    $(this).addClass('incorrect').append(' ❌');
+                    userAnswers['drag_' + $(this).text()] = false;
+                }
+            });
+            
+            // Show feedback
+            $('.feedback-area').show();
+            
+            // Save results to server
+            saveQuizResults('part1', userAnswers, correctCount, totalCount);
+            
+            // Show next button
+            $('.finish-quiz').show();
+        });
+        
+        // Review buttons
+        $('#review-btn, .review-btn').on('click', function() {
+            $(this).closest('div').find('.feedback').toggle();
+        });
+        
+        // Quiz form submission
+        $('#quiz-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            let correctCount = 0;
+            let totalCount = 0;
+            
+            // Check answers for each question
+            $('.question-container').each(function() {
+                const questionId = $(this).find('input[type="radio"]').attr('name');
+                const $selectedOption = $(this).find('input[type="radio"]:checked');
+                
+                if ($selectedOption.length) {
+                    totalCount++;
+                    const isCorrect = $selectedOption.data('correct') === true;
+                    
+                    if (isCorrect) {
+                        $selectedOption.closest('.kawaii-radio').addClass('correct');
+                        $selectedOption.closest('.kawaii-radio').append(' ✅');
+                        correctCount++;
+                    } else {
+                        $selectedOption.closest('.kawaii-radio').addClass('incorrect');
+                        $selectedOption.closest('.kawaii-radio').append(' ❌');
+                        
+                        // Find and mark the correct answer
+                        $(this).find('input[data-correct="true"]').closest('.kawaii-radio').append(' ✅');
+                    }
+                    
+                    userAnswers[questionId] = {
+                        answer: $selectedOption.val(),
+                        is_correct: isCorrect
+                    };
+                }
+            });
+            
+            // Show all feedback
+            $('.feedback').show();
+            
+            // Save results to server
+            saveQuizResults('part2', userAnswers, correctCount, totalCount);
+            
+            // Show finish button
+            $('.finish-quiz').show();
+        });
+        
+        // Interactive cat parts
+        $('.hotspot').on('click', function() {
+            const target = $(this).data('target');
+            const isCorrect = $(this).data('correct');
+            
+            if (isCorrect) {
+                $(this).addClass('correct-spot');
+                $(this).closest('.kawaii-panel-body').find('.happy-feedback').html(
+                    '<div class="kawaii-alert success"><div class="alert-icon">✓</div><div class="alert-content">Correct! The ' + 
+                    target + ' is an important indicator of a cat\'s emotions.</div></div>'
+                ).show();
+            } else {
+                $(this).addClass('incorrect-spot');
+                $(this).closest('.kawaii-panel-body').find('.happy-feedback').html(
+                    '<div class="kawaii-alert danger"><div class="alert-icon">✗</div><div class="alert-content">Not quite! The ' + 
+                    target + ' isn\'t the primary indicator in this case.</div></div>'
+                ).show();
+            }
+            
+            userAnswers['interactive_' + target] = isCorrect;
+        });
+        
+        // Cat petting
+        $('.pet-spot').on('click', function() {
+            const spot = $(this).data('spot');
+            const isCorrect = $(this).data('correct');
+            
+            if (isCorrect) {
+                $(this).addClass('correct-spot');
+                $('.pet-feedback').html(
+                    '<div class="kawaii-alert success"><div class="alert-icon">✓</div><div class="alert-content">Good choice! Most cats enjoy being petted on the ' + 
+                    spot + '.</div></div>'
+                ).show();
+            } else {
+                $(this).addClass('incorrect-spot');
+                $('.pet-feedback').html(
+                    '<div class="kawaii-alert danger"><div class="alert-icon">✗</div><div class="alert-content">Be careful! Many cats don\'t like being touched on the ' + 
+                    spot + '.</div></div>'
+                ).show();
+            }
+            
+            userAnswers['pet_' + spot] = isCorrect;
+        });
+        
+        // Cat feeding
+        $('.food-item').on('dragstart', function(e) {
+            e.originalEvent.dataTransfer.setData('text/plain', $(this).data('food'));
+        });
+        
+        $('.cat-feeding > img').on('dragover', function(e) {
+            e.preventDefault();
+        });
+        
+        $('.cat-feeding > img').on('drop', function(e) {
+            e.preventDefault();
+            const food = e.originalEvent.dataTransfer.getData('text/plain');
+            const $foodItem = $('.food-item[data-food="' + food + '"]');
+            const isCorrect = $foodItem.data('correct');
+            
+            if (isCorrect) {
+                $('.feed-feedback').html(
+                    '<div class="kawaii-alert success"><div class="alert-icon">✓</div><div class="alert-content">Good choice! Treats can help calm a stressed cat when offered properly.</div></div>'
+                ).show();
+            } else {
+                $('.feed-feedback').html(
+                    '<div class="kawaii-alert danger"><div class="alert-icon">✗</div><div class="alert-content">Not the best choice! A toy might not help a stressed cat relax.</div></div>'
+                ).show();
+            }
+            
+            userAnswers['feed_' + food] = isCorrect;
+        });
+        
+        // Save quiz results to server
+        function saveQuizResults(part, answers, score, total) {
+            $.ajax({
+                url: '/submit_answer',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    question_id: part,
+                    answer: answers,
+                    is_correct: (score / total >= 0.6) // Pass if 60% or higher
+                }),
+                success: function(response) {
+                    console.log('Results saved successfully');
+                },
+                error: function(error) {
+                    console.error('Error saving results:', error);
+                }
+            });
+        }
+        
+        // Navigation between quiz parts
+        $('.next-part').on('click', function(e) {
+            e.preventDefault();
+            
+            const currentPart = window.location.pathname.split('/').pop();
+            let nextPart;
+            
+            if (currentPart === 'part1') {
+                nextPart = 'part2';
+            } else if (currentPart === 'part2') {
+                nextPart = 'result';
+            }
+            
+            if (nextPart) {
+                window.location.href = '/quiz/' + nextPart;
+            }
+        });
+    });
+</script>
+{% endblock %}
