@@ -12,7 +12,7 @@ scenarios = {
     "id": "1",
     "emotion": "stressed-fearful",
     "title": "Stressed / Fearful",
-    "ear": "Rotated to the sides (in an “airplane ears” pose), or angled backward",
+    "ear": "Rotated to the sides (in an \"airplane ears\" pose), or angled backward",
     "eye": "Wide pupils",
     "tail": "Hold low to the body, tuck under body, or thrash and thump",
     "body": "Arched back (to look bigger), or crouch low to ground (to hide), grooming more than usual, hide under furniture or in corners",
@@ -72,7 +72,7 @@ scenarios = {
     "title": "Curious / Playful",
     "ear": "Up and forward facing",
     "eye": "Big and bright, might be slightly dilated",
-    "tail": "Upright with curled tip (“question mark” shape), quickly flick their tail from side to side in hunting and watching whatever is captivating their attention",
+    "tail": "Upright with curled tip (\"question mark\" shape), quickly flick their tail from side to side in hunting and watching whatever is captivating their attention",
     "body": "Slight arched back, Slow stalking movements, crouched with butt wiggles, short bursts of running",
     "paw": "Occasional paw bats at objects",
     "sound": "Soft chirps, trills",
@@ -203,55 +203,54 @@ def submit_answer():
         return jsonify({'status': 'error', 'message': 'Quiz not started'})
     
     data = request.get_json()
-    question_id = data.get('question_id')
-    answer = data.get('answer')
-    is_correct = data.get('is_correct', False)
+    score = data.get('score', 0)
+    total = data.get('total', 0)
+    answers = data.get('answers', {})
+    drag_drop_selections = data.get('dragDropSelections', [])
     
-    if not question_id or answer is None:
-        return jsonify({'status': 'error', 'message': 'Invalid data'})
-    
-    # Store answer in session
-    if 'quiz_answers' not in session:
-        session['quiz_answers'] = {}
-    
-    session['quiz_answers'][question_id] = {
-        'answer': answer,
-        'is_correct': is_correct
-    }
+    # Store results in session
+    session['quiz_score'] = score
+    session['quiz_total'] = total
+    session['quiz_answers'] = answers
+    session['drag_drop_selections'] = drag_drop_selections
     session.modified = True
+    
+    # Save to database
+    conn = get_db_connection()
+    user_id = session.get('user_id', os.urandom(8).hex())
+    session['user_id'] = user_id
+    
+    # Store all the data as JSON
+    all_answers = {
+        'multiple_choice': answers,
+        'drag_drop': drag_drop_selections
+    }
+    
+    conn.execute(
+        'INSERT INTO quiz_results (user_id, score, total, answers, timestamp) VALUES (?, ?, ?, ?, ?)',
+        (user_id, score, total, json.dumps(all_answers), datetime.now())
+    )
+    conn.commit()
+    conn.close()
     
     return jsonify({'status': 'success'})
 
 @app.route('/quiz/result')
 def quiz_result():
-    if not session.get('quiz_started', False) or not session.get('quiz_answers'):
+    if not session.get('quiz_started', False):
         return redirect(url_for('quiz'))
     
-    # Calculate score
-    answers = session.get('quiz_answers', {})
-    correct_count = sum(1 for answer in answers.values() if answer.get('is_correct', False))
-    total_count = len(answers)
-    
-    # Generate a random user ID if not exists
-    if 'user_id' not in session:
-        session['user_id'] = os.urandom(8).hex()
-    
-    # Save to database
-    conn = get_db_connection()
-    conn.execute(
-        'INSERT INTO quiz_results (user_id, score, total, answers, timestamp) VALUES (?, ?, ?, ?, ?)',
-        (session['user_id'], correct_count, total_count, json.dumps(answers), datetime.now())
-    )
-    conn.commit()
-    conn.close()
+    score = session.get('quiz_score', 0)
+    total = session.get('quiz_total', 0)
+    percentage = (score / total * 100) if total > 0 else 0
     
     # Clear quiz session
     session['quiz_started'] = False
     
     return render_template('quiz_result.html', 
-                          score=correct_count, 
-                          total=total_count,
-                          percentage=(correct_count / total_count * 100) if total_count > 0 else 0)
+                          score=score, 
+                          total=total,
+                          percentage=percentage)
 
 @app.route('/about')
 def about():

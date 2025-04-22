@@ -3,58 +3,63 @@
 {% block title %}Quiz Results{% endblock %}
 
 {% block content %}
-<div class="quiz-container">
-    <div class="quiz-navigation mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="kawaii-breadcrumb">
-                <a href="{{ url_for('home') }}" class="kawaii-link">HOME</a> &gt;
-                <a href="{{ url_for('tutorial') }}" class="kawaii-link">SCENARIO</a> &gt;
-                <a href="{{ url_for('quiz') }}" class="kawaii-link">QUIZ</a>
-            </div>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0 text-center">Quiz Results</h2>
         </div>
-    </div>
-
-    <div class="quiz-content text-center">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <a href="{{ url_for('quiz') }}" class="kawaii-button back-button">&lt; Go Back</a>
-            <div class="kawaii-pagination">Quiz &gt; Result</div>
-        </div>
-
-        <div class="kawaii-panel mb-4">
-            <div class="kawaii-panel-body p-5">
-                {% if percentage >= 80 %}
-                    <div class="neko-teacher mb-4">
-                        <img src="{{ url_for('static', filename='images/neko-happy.png') }}" alt="Happy Neko" class="neko-teacher-img">
-                        <div class="speech-bubble">
-                            <p>Excellent job! You really understand cat body language!</p>
-                        </div>
-                    </div>
-                    <h3 class="kawaii-title text-success mb-4">Congratulations!</h3>
-                    <h4 class="kawaii-subtitle mb-4">You know cats very well! ({{ score }}/{{ total }})</h4>
-                {% elif percentage >= 60 %}
-                    <div class="neko-teacher mb-4">
-                        <img src="{{ url_for('static', filename='images/neko-curious.png') }}" alt="Curious Neko" class="neko-teacher-img">
-                        <div class="speech-bubble">
-                            <p>Good job! You understand the basics of cat body language!</p>
-                        </div>
-                    </div>
-                    <h3 class="kawaii-title text-primary mb-4">Good Job!</h3>
-                    <h4 class="kawaii-subtitle mb-4">You understand cats pretty well! ({{ score }}/{{ total }})</h4>
-                {% else %}
-                    <div class="neko-teacher mb-4">
-                        <img src="{{ url_for('static', filename='images/neko-sad.png') }}" alt="Sad Neko" class="neko-teacher-img">
-                        <div class="speech-bubble">
-                            <p>Unfortunately, you still have more to learn about cat body language.</p>
-                        </div>
-                    </div>
-                    <h3 class="kawaii-title text-danger mb-4">Unfortunately,</h3>
-                    <h4 class="kawaii-subtitle mb-4">You don't know me well enough ({{ score }}/{{ total }})</h4>
-                {% endif %}
-                
-                <div class="d-flex justify-content-center gap-3 mt-4">
-                    <a href="{{ url_for('quiz') }}" class="kawaii-button primary-button">➢ Try Quiz Again</a>
-                    <a href="{{ url_for('tutorial') }}" class="kawaii-button secondary-button">➢ Go Back and Learn</a>
+        <div class="card-body text-center">
+            <h3>Your Score: {{ score }}/{{ total }}</h3>
+            <div class="progress my-4">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ percentage|int }}%" aria-valuenow="{{ percentage|int }}" aria-valuemin="0" aria-valuemax="100">
+                    {{ percentage|int }}%
                 </div>
+            </div>
+            
+            {% if percentage >= 80 %}
+                <div class="alert alert-success">
+                    <h4>Excellent!</h4>
+                    <p>You have a great understanding of cat body language!</p>
+                    <div class="mt-3">
+                        <img src="{{ url_for('static', filename='images/happy-cat.png') }}" alt="Happy cat" style="max-width: 150px;">
+                    </div>
+                </div>
+            {% elif percentage >= 60 %}
+                <div class="alert alert-info">
+                    <h4>Good job!</h4>
+                    <p>You understand the basics of cat body language.</p>
+                    <div class="mt-3">
+                        <img src="{{ url_for('static', filename='images/playful-cat.png') }}" alt="Playful cat" style="max-width: 150px;">
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <h4>Keep learning!</h4>
+                    <p>You might want to review the cat body language tutorials again.</p>
+                    <div class="mt-3">
+                        <img src="{{ url_for('static', filename='images/stressed-cat.png') }}" alt="Stressed cat" style="max-width: 150px;">
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4>Key Takeaways</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item">A happy cat holds its tail upright with a slight curl at the tip</li>
+                        <li class="list-group-item">Flattened ears indicate fear or anger in cats</li>
+                        <li class="list-group-item">Slow blinking is a sign of trust and affection ("cat kisses")</li>
+                        <li class="list-group-item">A crouched position with dilated pupils typically indicates stress or fear</li>
+                        <li class="list-group-item">Kneading behavior originates from nursing as kittens</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{{ url_for('quiz') }}" class="btn btn-primary me-2">Try Again</a>
+                <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
             </div>
         </div>
     </div>

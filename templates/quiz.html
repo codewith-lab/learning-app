@@ -3,37 +3,596 @@
 {% block title %}Quiz{% endblock %}
 
 {% block content %}
-<div class="quiz-container">
-    <div class="quiz-navigation mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="kawaii-breadcrumb">
-                <a href="{{ url_for('home') }}" class="kawaii-link">HOME</a> &gt;
-                <a href="{{ url_for('tutorial') }}" class="kawaii-link">SCENARIO</a> &gt;
-                <a href="{{ url_for('quiz') }}" class="kawaii-link">QUIZ</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="quiz-content text-center">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <a href="{{ url_for('tutorial_category', category='happy-relaxed') }}" class="kawaii-button back-button">&lt; Go Back</a>
-            <div class="kawaii-pagination">Quiz &gt; <a href="{{ url_for('quiz_part', part='part1') }}" class="kawaii-link">Next</a></div>
-        </div>
-
-        <div class="kawaii-panel p-5">
-            <div class="neko-teacher mb-4">
-                <img src="{{ url_for('static', filename='images/neko-quiz.png') }}" alt="Quiz Neko" class="neko-teacher-img">
-                <div class="speech-bubble">
-                    <p>Let's see how well you understand cat body language! Are you ready for the quiz?</p>
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Cat Body Language Quiz</h2>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <!-- Drag and Drop Cat Images Section -->
+            <div class="mb-5">
+                <h4 class="mb-3">Drag each cat image to the correct category based on their body language</h4>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Positive/Happy Body Language</h5>
+                            </div>
+                            <div class="card-body dropzone" id="positive-dropzone">
+                                <p class="text-muted text-center dropzone-placeholder">Drop happy cats here</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-danger text-white">
+                                <h5 class="mb-0">Negative/Stressed Body Language</h5>
+                            </div>
+                            <div class="card-body dropzone" id="negative-dropzone">
+                                <p class="text-muted text-center dropzone-placeholder">Drop stressed cats here</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="drag-container d-flex flex-wrap justify-content-center gap-3 mb-3">
+                    <div class="draggable-item" draggable="true" data-category="positive">
+                        <img src="{{ url_for('static', filename='images/happy-cat.png') }}" class="cat-image" alt="Cat with upright tail">
+                        <div class="cat-caption">Cat with upright tail</div>
+                    </div>
+                    <div class="draggable-item" draggable="true" data-category="negative">
+                        <img src="{{ url_for('static', filename='images/stressed-cat.png') }}" class="cat-image" alt="Cat with flattened ears">
+                        <div class="cat-caption">Cat with flattened ears</div>
+                    </div>
+                    <div class="draggable-item" draggable="true" data-category="positive">
+                        <img src="{{ url_for('static', filename='images/playful-cat.png') }}" class="cat-image" alt="Cat kneading with paws">
+                        <div class="cat-caption">Cat kneading with paws</div>
+                    </div>
+                    <div class="draggable-item" draggable="true" data-category="negative">
+                        <img src="{{ url_for('static', filename='images/sick-cat.png') }}" class="cat-image" alt="Cat with tail tucked">
+                        <div class="cat-caption">Cat with tail tucked</div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info" id="drag-drop-feedback" style="display:none;"></div>
             </div>
             
-            <h2 class="kawaii-title mb-4">Quiz Time!</h2>
-            <h3 class="kawaii-subtitle">Ready?</h3>
-            <div class="mt-4">
-                <a href="{{ url_for('quiz_part', part='part1') }}" class="kawaii-button primary-button">Start Quiz</a>
-            </div>
+            <form id="quizForm" action="{{ url_for('submit_answer') }}" method="post">
+                <!-- Question 1 -->
+                <div class="mb-4 question-container" id="q1-container">
+                    <h5>1. Which tail position indicates a happy, confident cat?</h5>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q1" id="q1a" value="a" data-correct="false">
+                        <label class="form-check-label" for="q1a">Tucked between legs</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q1" id="q1b" value="b" data-correct="false">
+                        <label class="form-check-label" for="q1b">Puffed up and bristled</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q1" id="q1c" value="c" data-correct="true">
+                        <label class="form-check-label" for="q1c">Upright with a slight curl at the tip</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q1" id="q1d" value="d" data-correct="false">
+                        <label class="form-check-label" for="q1d">Thrashing from side to side</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="feedback-text mt-2" style="display: none;"></div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="mb-4 question-container" id="q2-container">
+                    <h5>2. When a cat's ears are flattened against their head, it usually means:</h5>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q2" id="q2a" value="a" data-correct="false">
+                        <label class="form-check-label" for="q2a">They're happy</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q2" id="q2b" value="b" data-correct="true">
+                        <label class="form-check-label" for="q2b">They're afraid or angry</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q2" id="q2c" value="c" data-correct="false">
+                        <label class="form-check-label" for="q2c">They're curious</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q2" id="q2d" value="d" data-correct="false">
+                        <label class="form-check-label" for="q2d">They're sleepy</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="feedback-text mt-2" style="display: none;"></div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="mb-4 question-container" id="q3-container">
+                    <h5>3. Slow blinking from a cat is often a sign of:</h5>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q3" id="q3a" value="a" data-correct="false">
+                        <label class="form-check-label" for="q3a">Boredom</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q3" id="q3b" value="b" data-correct="false">
+                        <label class="form-check-label" for="q3b">Hunger</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q3" id="q3c" value="c" data-correct="true">
+                        <label class="form-check-label" for="q3c">Trust and affection</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q3" id="q3d" value="d" data-correct="false">
+                        <label class="form-check-label" for="q3d">Irritation</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="feedback-text mt-2" style="display: none;"></div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="mb-4 question-container" id="q4-container">
+                    <h5>4. A cat crouched low to the ground with dilated pupils is likely:</h5>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q4" id="q4a" value="a" data-correct="false">
+                        <label class="form-check-label" for="q4a">Ready to pounce in play</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q4" id="q4b" value="b" data-correct="true">
+                        <label class="form-check-label" for="q4b">Feeling stressed or fearful</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q4" id="q4c" value="c" data-correct="false">
+                        <label class="form-check-label" for="q4c">Looking for attention</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q4" id="q4d" value="d" data-correct="false">
+                        <label class="form-check-label" for="q4d">Feeling sick</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="feedback-text mt-2" style="display: none;"></div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="mb-4 question-container" id="q5-container">
+                    <h5>5. Kneading behavior (pushing paws against a soft surface) in cats originates from:</h5>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q5" id="q5a" value="a" data-correct="false">
+                        <label class="form-check-label" for="q5a">Marking territory</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q5" id="q5b" value="b" data-correct="true">
+                        <label class="form-check-label" for="q5b">Nursing behavior as kittens</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q5" id="q5c" value="c" data-correct="false">
+                        <label class="form-check-label" for="q5c">Stretching muscles</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input answer-option" type="radio" name="q5" id="q5d" value="d" data-correct="false">
+                        <label class="form-check-label" for="q5d">Learned from watching humans</label>
+                        <span class="feedback-icon"></span>
+                    </div>
+                    <div class="feedback-text mt-2" style="display: none;"></div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary">Submit Quiz</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<style>
+.question-container {
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.question-container:hover {
+    background-color: #f8f9fa;
+}
+
+.form-check {
+    position: relative;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.form-check:hover {
+    background-color: #e9ecef;
+}
+
+.feedback-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.correct-answer {
+    background-color: rgba(40, 167, 69, 0.2);
+}
+
+.incorrect-answer {
+    background-color: rgba(220, 53, 69, 0.2);
+}
+
+.feedback-text {
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.correct-feedback {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.incorrect-feedback {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+/* Drag and Drop Styles */
+.draggable-item {
+    cursor: grab;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 140px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.draggable-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+}
+
+.draggable-item.dragging {
+    opacity: 0.5;
+    border: 2px dashed #007bff;
+}
+
+.cat-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+
+.cat-caption {
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.dropzone {
+    min-height: 150px;
+    border: 2px dashed #dee2e6;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.dropzone.hover {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+}
+
+.dropzone-placeholder {
+    margin: 0;
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.dropzone .draggable-item {
+    margin: 5px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const questions = document.querySelectorAll('.question-container');
+    const radioInputs = document.querySelectorAll('.answer-option');
+    let answeredCount = 0;
+    
+    // Drag and Drop Functionality
+    const draggableItems = document.querySelectorAll('.draggable-item');
+    const dropzones = document.querySelectorAll('.dropzone');
+    const dragDropFeedback = document.getElementById('drag-drop-feedback');
+    let draggedItem = null;
+    
+    // Add drag event listeners to draggable items
+    draggableItems.forEach(item => {
+        item.addEventListener('dragstart', function() {
+            this.classList.add('dragging');
+            draggedItem = this;
+        });
+        
+        item.addEventListener('dragend', function() {
+            this.classList.remove('dragging');
+            // Remove immediate feedback
+            // checkDragAndDropCompletion();
+        });
+    });
+    
+    // Add drop event listeners to dropzones
+    dropzones.forEach(zone => {
+        zone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('hover');
+        });
+        
+        zone.addEventListener('dragleave', function() {
+            this.classList.remove('hover');
+        });
+        
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('hover');
+            
+            if (draggedItem) {
+                // Check if placeholder needs to be removed
+                const placeholder = this.querySelector('.dropzone-placeholder');
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                }
+                
+                // Check if this is a "reset" drop to original container
+                if (draggedItem.parentNode === this) {
+                    return;
+                }
+                
+                // Remove from previous parent if it was in a dropzone
+                if (draggedItem.parentNode.classList.contains('dropzone')) {
+                    draggedItem.parentNode.appendChild(draggedItem);
+                }
+                
+                // Add to new dropzone
+                this.appendChild(draggedItem);
+            }
+        });
+    });
+    
+    // Check if all items are correctly categorized - will be called on submit
+    function checkDragAndDropCompletion() {
+        const positiveDropzone = document.getElementById('positive-dropzone');
+        const negativeDropzone = document.getElementById('negative-dropzone');
+        const dragContainer = document.querySelector('.drag-container');
+        
+        // Count items in each zone
+        const positiveItems = positiveDropzone.querySelectorAll('.draggable-item');
+        const negativeItems = negativeDropzone.querySelectorAll('.draggable-item');
+        
+        // Calculate score for drag and drop section
+        let dragDropScore = 0;
+        let totalDragItems = draggableItems.length;
+        
+        positiveItems.forEach(item => {
+            if (item.dataset.category === 'positive') {
+                dragDropScore++;
+                item.style.borderColor = '#28a745';
+            } else {
+                item.style.borderColor = '#dc3545';
+            }
+        });
+        
+        negativeItems.forEach(item => {
+            if (item.dataset.category === 'negative') {
+                dragDropScore++;
+                item.style.borderColor = '#28a745';
+            } else {
+                item.style.borderColor = '#dc3545';
+            }
+        });
+        
+        // Display feedback
+        if (dragDropScore === totalDragItems) {
+            dragDropFeedback.className = 'alert alert-success';
+            dragDropFeedback.innerHTML = 'Great job! You correctly categorized all the cats based on their body language!';
+        } else {
+            dragDropFeedback.className = 'alert alert-danger';
+            dragDropFeedback.innerHTML = `You got ${dragDropScore}/${totalDragItems} cats correct. Green borders indicate correct placements, red borders indicate incorrect placements.`;
+        }
+        
+        dragDropFeedback.style.display = 'block';
+        
+        return dragDropScore;
+    }
+    
+    // Feedback texts for each question
+    const feedbackTexts = {
+        q1: {
+            correct: "Correct! A tail held high with a slight curl at the tip is a sign of a happy, confident cat.",
+            incorrect: "Not quite. A happy, confident cat holds its tail upright with a slight curl at the tip."
+        },
+        q2: {
+            correct: "Correct! Flattened ears indicate fear or anger in cats.",
+            incorrect: "That's not right. When a cat flattens its ears against its head, it's usually afraid or angry."
+        },
+        q3: {
+            correct: "Correct! Slow blinking is a sign of trust and affection, sometimes called 'cat kisses'.",
+            incorrect: "Not quite. Slow blinking from a cat is a sign of trust and affection, often called 'cat kisses'."
+        },
+        q4: {
+            correct: "Correct! A crouched position with dilated pupils typically indicates stress or fear.",
+            incorrect: "That's not right. A cat crouched low with dilated pupils is usually feeling stressed or fearful."
+        },
+        q5: {
+            correct: "Correct! Kneading behavior originates from kittenhood when they knead their mother's belly while nursing.",
+            incorrect: "Not quite. Kneading comes from nursing behavior as kittens."
+        }
+    };
+    
+    // Update progress - no longer needed since we removed the progress bar
+    function updateProgress() {
+        // Function kept for compatibility but doesn't do anything now
+        answeredCount++;
+    }
+
+    // Add click event listeners to all radio inputs
+    radioInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const questionName = this.name;
+            const questionContainer = document.getElementById(`${questionName}-container`);
+            
+            // If this is the first time answering this question
+            if (!questionContainer.classList.contains('answered')) {
+                updateProgress();
+                questionContainer.classList.add('answered');
+            }
+            
+            // Remove immediate feedback
+            /*
+            const feedbackTextElement = questionContainer.querySelector('.feedback-text');
+            const allOptions = questionContainer.querySelectorAll('.form-check');
+            const isCorrect = this.getAttribute('data-correct') === 'true';
+            
+            // Reset all options
+            allOptions.forEach(option => {
+                option.classList.remove('correct-answer', 'incorrect-answer');
+                const icon = option.querySelector('.feedback-icon');
+                icon.innerHTML = '';
+            });
+            
+            // Add appropriate class and icon to selected option
+            const selectedOption = this.parentElement;
+            if (isCorrect) {
+                selectedOption.classList.add('correct-answer');
+                selectedOption.querySelector('.feedback-icon').innerHTML = '✓';
+                feedbackTextElement.textContent = feedbackTexts[questionName].correct;
+                feedbackTextElement.classList.add('correct-feedback');
+                feedbackTextElement.classList.remove('incorrect-feedback');
+            } else {
+                selectedOption.classList.add('incorrect-answer');
+                selectedOption.querySelector('.feedback-icon').innerHTML = '✗';
+                feedbackTextElement.textContent = feedbackTexts[questionName].incorrect;
+                feedbackTextElement.classList.add('incorrect-feedback');
+                feedbackTextElement.classList.remove('correct-feedback');
+                
+                // Show the correct answer
+                allOptions.forEach(option => {
+                    const input = option.querySelector('input');
+                    if (input.getAttribute('data-correct') === 'true') {
+                        option.classList.add('correct-answer');
+                        option.querySelector('.feedback-icon').innerHTML = '✓';
+                    }
+                });
+            }
+            
+            // Show feedback text
+            feedbackTextElement.style.display = 'block';
+            */
+        });
+    });
+
+    // Form submission - show all feedback at once
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Check drag-and-drop answers
+        const dragDropScore = checkDragAndDropCompletion();
+        
+        // Get drag-and-drop selections for tracking
+        const positiveDropzone = document.getElementById('positive-dropzone');
+        const negativeDropzone = document.getElementById('negative-dropzone');
+        
+        // Extract data about which cat was placed in which category
+        const positiveItems = Array.from(positiveDropzone.querySelectorAll('.draggable-item')).map(item => {
+            return {
+                id: item.querySelector('.cat-caption').textContent,
+                category: 'positive',
+                correctCategory: item.dataset.category
+            };
+        });
+        
+        const negativeItems = Array.from(negativeDropzone.querySelectorAll('.draggable-item')).map(item => {
+            return {
+                id: item.querySelector('.cat-caption').textContent,
+                category: 'negative',
+                correctCategory: item.dataset.category
+            };
+        });
+        
+        // Combine the items for tracking
+        const dragDropSelections = [...positiveItems, ...negativeItems];
+        
+        // Check multiple choice answers
+        const answers = {
+            q1: 'c',
+            q2: 'b',
+            q3: 'c',
+            q4: 'b', 
+            q5: 'b'
+        };
+        
+        let mcScore = 0;
+        let mcTotal = Object.keys(answers).length;
+        let userAnswers = {};
+        
+        // Collect user answers without showing feedback
+        for (const question in answers) {
+            const selected = document.querySelector(`input[name="${question}"]:checked`);
+            
+            if (selected) {
+                userAnswers[question] = selected.value;
+                if (selected.value === answers[question]) {
+                    mcScore++;
+                }
+            } else {
+                // If user didn't answer, still track as unanswered
+                userAnswers[question] = 'unanswered';
+            }
+        }
+        
+        // Calculate total score including drag and drop
+        let totalScore = mcScore + dragDropScore;
+        let totalPossible = mcTotal + draggableItems.length;
+        
+        // Send the results via fetch and go directly to results page
+        fetch('{{ url_for("submit_answer") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                score: totalScore,
+                total: totalPossible,
+                answers: userAnswers,
+                dragDropSelections: dragDropSelections
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = '{{ url_for("quiz_result") }}';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
