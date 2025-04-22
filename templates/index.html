@@ -3,24 +3,27 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="home-container text-center">
+<div class="home-container">
     <div class="hero-section">
-        <h1 class="kawaii-title mb-4">Cat Body Language</h1>
-        <h2 class="kawaii-subtitle mb-5">The Emotional Cat - Decoding Cat Clues Made Simple</h2>
+        <h1 class="kawaii-title">Cat Body Language</h1>
+        <h2 class="kawaii-subtitle">The Emotional Cat - Decoding Cat Clues Made Simple</h2>
         
     </div>
     
     <div class="neko-teacher">
         <img src="{{ url_for('static', filename='images/neko-teacher.png') }}" alt="Neko Teacher" class="neko-teacher-img">
         <div class="speech-bubble">
-            <p>Welcome to Cat Master! My name is Coney. </p>
-            <p>I'll teach you all about cat body languages. Choose a scenario to get started!</p>
+            <div class="speech-bubble-text">
+                <p>Welcome to Cat Master! My name is Coney. </p>
+                <p>I'll teach you all about cat body languages. Choose a scenario to get started!</p>
+        
+            </div>
         </div>
     </div>
 
     <div class="row cat-categories mt-5">
-        <div class="col-md-3 mb-4"></div>
-        <div class="col-md-3 mb-4">
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
             <a href="{{ url_for('tutorial_category', category='stressed-fearful') }}" class="kawaii-card-link">
                 <div class="kawaii-card">
                     <div class="kawaii-card-body">
@@ -29,7 +32,7 @@
                 </div> 
             </a>
         </div>
-        <div class="col-md-3 mb-4">
+        <div class="col-md-3">
             <a href="{{ url_for('tutorial_category', category='painful-sick') }}" class="kawaii-card-link">
                 <div class="kawaii-card">
                     <div class="kawaii-card-body">
@@ -38,9 +41,9 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-3 mb-4"></div>
-        <div class="col-md-3 mb-4"></div>
-        <div class="col-md-3 mb-4">
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
             <a href="{{ url_for('tutorial_category', category='curious-playful') }}" class="kawaii-card-link">
                 <div class="kawaii-card">
                     <div class="kawaii-card-body">
@@ -49,7 +52,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-3 mb-4">
+        <div class="col-md-3">
             <a href="{{ url_for('tutorial_category', category='happy-relaxed') }}" class="kawaii-card-link">
                 <div class="kawaii-card">
                     <div class="kawaii-card-body">
@@ -58,7 +61,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-3 mb-4"></div>
+        <div class="col-md-3"></div>
     </div>
     
 </div>

@@ -3,261 +3,78 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+<script type = "text/javascript" src = "{{ url_for('static', filename = 'js/scenario.js') }}"></script>
+
+<script>
+    let scenario = {{scenario|tojson}};
+    let prev_category = {{prev_category|tojson}};
+    let next_category = {{next_category|tojson}};
+</script>
+
 <div class="scenario-container">
-    <div class="scenario-navigation mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="kawaii-breadcrumb">
-                <a href="{{ url_for('home') }}" class="kawaii-link">HOME</a> &gt;
-                <a href="{{ url_for('tutorial') }}" class="kawaii-link">SCENARIO</a> &gt;
-                <a href="{{ url_for('quiz') }}" class="kawaii-link">QUIZ</a>
-            </div>
-        </div>
-    </div>
-
     <div class="scenario-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <a href="{{ url_for('tutorial') }}" class="kawaii-button back-button">&lt; Go Back</a>
-            <div class="kawaii-pagination">Scenario &gt; {{ title }} &gt; <a href="#" class="kawaii-link">Next</a></div>
+        <div class="scenario-header">
+            <a href="{{ url_for('tutorial_category', category=prev_category) }}" class="kawaii-button back-button">&lt; Go Back</a>
+            <h2 class="kawaii-title scenario">{{ scenario["title"] }}</h2>
+            <a href="{{ url_for('tutorial_category', category=next_category) }}" class="kawaii-button next-button">&gt; Next</a>
         </div>
 
-        {% if category == 'stressed-fearful' %}
-            <div class="kawaii-panel mb-4">
-                <div class="kawaii-panel-header">
-                    <h3>Stressed / Fearful Body Language</h3>
-                </div>
-                <div class="kawaii-panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="kawaii-list">
-                                <li>Eyes: Wide pupils</li>
-                                <li>Ears: Rotated to the sides (in an "airplane ears" pose) or angled backward</li>
-                                <li>Tail: Hold low to the body, tuck under body, or thrash and thump</li>
-                                <li>Body: Crouch low to ground, grooming more than usual, hide under furniture or in corners</li>
-                                <li>Face: Excessive lip-clicking / yawning, whiskers pulled back</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="kawaii-illustration">
-                                <img src="{{ url_for('static', filename='images/stressed-cat-detail.png') }}" alt="Stressed Cat Illustration" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="kawaii-alert warning mt-4">
-                        <div class="alert-icon">⚠</div>
-                        <div class="alert-content">
-                            <h4>Watch Out Signs of Severe Level</h4>
-                            <ul class="kawaii-list">
-                                <li>Eyes: Staring</li>
-                                <li>Ears: Pinned flat against head</li>
-                                <li>Tail: Puffed up like a bottlebrush (to look bigger), flick or thrash</li>
-                                <li>Body: Frozen crouch, arched back (to look bigger)</li>
-                                <li>Face: Hissing / growling, teeth bared</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <h5 class="kawaii-subtitle">Common Scenarios:</h5>
-                        <div class="kawaii-scenarios">
-                            <div class="scenario-item">New to Home (First Few Days)</div>
-                            <div class="scenario-item">Loud Noises (Vacuum, Thunder etc.)</div>
-                            <div class="scenario-item">Vet Check</div>
-                            <div class="scenario-item">Conflict with Another Cat</div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="kawaii-panel success">
-                                <div class="kawaii-panel-header">
-                                    <h5>⚠ Help Me Out!</h5>
-                                </div>
-                                <div class="kawaii-panel-body">
-                                    <ul class="kawaii-list check-list">
-                                        <li>Provide a soundproof hiding spot, give space</li>
-                                        <li>Keep familiar bedding / toys in new spaces</li>
-                                        <li>Offer high-value treats – Toss near them</li>
-                                        <li>[Severe Level] Use feliway diffusers or calming sprays</li>
-                                        <li>[Severe Level] Isolate immediately - quiet, dark room with litter / food / water</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="kawaii-panel danger">
-                                <div class="kawaii-panel-header">
-                                    <h5>Don't Do This!</h5>
-                                </div>
-                                <div class="kawaii-panel-body">
-                                    <ul class="kawaii-list x-list">
-                                        <li>Stare directly</li>
-                                        <li>Punishment</li>
-                                        <li>Force interaction - touch, cuddles, pull out of hiding</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+        <div class="kawaii-panel scenario"  
+             style="background-image: url('{{ scenario['env-image'] }}')">
+            <div class="neko-teacher">
+                <img src="{{ url_for('static', filename='images/neko-teacher.png') }}" alt="Neko Teacher" class="neko-teacher-img small">
+                <div class="speech-bubble small">
+                    <div class="speech-bubble-text small">
+                        Hover your mouse over my friend to see where is clickable.
+                        <img src="{{ url_for('static', filename='images/pointer-hover.png') }}" alt="pointer-hover" class="pointer-icon">
                     </div>
                 </div>
             </div>
-        {% elif category == 'painful-sick' %}
-            <div class="kawaii-panel mb-4">
-                <div class="kawaii-panel-header">
-                    <h3>Painful / Sick Body Language</h3>
-                </div>
-                <div class="kawaii-panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="kawaii-list">
-                                <li>Eyes: Squinting or half-closed, uneven pupil sizes</li>
-                                <li>Ears: Flattened or rotated outward, less responsive to sounds</li>
-                                <li>Tail: Hold stiffly, low to ground</li>
-                                <li>Body: Stiff and hunched posture, legs tucked, reluctant to move, decreased appetite</li>
-                                <li>Face: whiskers pulled back, running nose</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="kawaii-illustration">
-                                <img src="{{ url_for('static', filename='images/sick-cat-detail.png') }}" alt="Sick Cat Illustration" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="kawaii-alert warning mt-4">
-                        <div class="alert-icon">⚠</div>
-                        <div class="alert-content">
-                            <h4>Watch Out Signs of Severe Level</h4>
-                            <ul class="kawaii-list">
-                                <li>Eyes: Fully dilated pupils</li>
-                                <li>Ears: Hot to touch</li>
-                                <li>Tail: Completely limp or rigid</li>
-                                <li>Body: Completely collapse, cannot stand, no eating / drinking for 12+ hours</li>
-                                <li>Face: Open-mouth panting</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="neko-teacher mt-4">
-                        <img src="{{ url_for('static', filename='images/neko-doctor.png') }}" alt="Neko Doctor" class="neko-teacher-img small">
-                        <div class="speech-bubble">
-                            <p>If you notice these severe symptoms, please take your cat to the vet immediately!</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="kawaii-body" 
+                 style="background-image: url('{{ url_for('static', filename='images/' + scenario['cat-image']) }}');
+                        top: {{ scenario['image-contrl']['top'] }};
+                        left: {{ scenario['image-contrl']['left'] }};
+                        width: {{ scenario['image-contrl']['width'] }};
+                        height: {{ scenario['image-contrl']['height'] }};">
+                {% if scenario['ear'] %}
+                    <div class="click-zone ear" 
+                         data-part="ear" 
+                         data-response="{{scenario['ear']}}"
+                         style="top: {{ scenario['positions']['ear']['top'] }}; left: {{ scenario['positions']['ear']['left'] }};"></div>
+                {% endif %}
+                {% if scenario['eye'] %}
+                    <div class="click-zone eye" 
+                         data-part="eye" 
+                         data-response="{{scenario['eye']}}"
+                         style="top: {{ scenario['positions']['eye']['top'] }}; left: {{ scenario['positions']['eye']['left'] }};"></div>
+                {% endif %}
+                {% if scenario['tail'] %}
+                    <div class="click-zone tail"
+                         data-part="tail" 
+                         data-response="{{scenario['tail']}}"
+                         style="top: {{ scenario['positions']['tail']['top'] }}; left: {{ scenario['positions']['tail']['left'] }};"></div>
+                {% endif %}
+                {% if scenario['body'] %}
+                    <div class="click-zone body" 
+                         data-part="body" 
+                         data-response="{{scenario['body']}}"
+                         style="top: {{ scenario['positions']['body']['top'] }}; left: {{ scenario['positions']['body']['left'] }};"></div>
+                {% endif %}
+                {% if scenario['paw'] %}
+                    <div class="click-zone paw" 
+                         data-part="paw" 
+                         data-response="{{scenario['paw']}}"
+                         style="top: {{ scenario['positions']['paw']['top'] }}; left: {{ scenario['positions']['paw']['left'] }};"></div>
+                {% endif %}
+                {% if scenario['sound'] %}
+                    <div class="click-zone sound" 
+                         data-part="sound" 
+                         data-response="{{scenario['sound']}}"
+                         style="top: {{ scenario['positions']['sound']['top'] }}; left: {{ scenario['positions']['sound']['left'] }};"></div>
+                {% endif %}
             </div>
-        {% elif category == 'curious-playful' %}
-            <div class="kawaii-panel mb-4">
-                <div class="kawaii-panel-header">
-                    <h3>Curious / Playful Body Language</h3>
-                </div>
-                <div class="kawaii-panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="kawaii-list">
-                                <li>Eyes: Big and bright, might be slightly dilated</li>
-                                <li>Ears: Up and forward facing</li>
-                                <li>Tail: Upright with curled tip ("question mark" shape), or quickly flick their tail from side to side in hunting and watching whatever is captivating their attention</li>
-                                <li>Body: Slow stalking movements, crouched with butt wiggles, short bursts of running, occasional paw bats at objects, slight arched back</li>
-                                <li>Sound: Soft chirps or trills</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="kawaii-illustration">
-                                <img src="{{ url_for('static', filename='images/playful-cat-detail.png') }}" alt="Playful Cat Illustration" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="kawaii-alert warning mt-4">
-                        <div class="alert-icon">⚠</div>
-                        <div class="alert-content">
-                            <h4>Watch Out the Subtle Difference</h4>
-                            <ul class="kawaii-list">
-                                <li>A quick flicking tail when I am not stalking or paying attention -> annoyed or irritated</li>
-                                <li>An arched back and puffed up -> stressed or feared</li>
-                                <li>A completely flatten ear -> switching to aggression</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="neko-teacher mt-4">
-                        <img src="{{ url_for('static', filename='images/neko-playful.png') }}" alt="Playful Neko" class="neko-teacher-img small">
-                        <div class="speech-bubble">
-                            <p>We are predators with a natural instinct to hunt. When I want to play, I may act like I am hunting.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% elif category == 'happy-relaxed' %}
-            <div class="kawaii-panel mb-4">
-                <div class="kawaii-panel-header">
-                    <h3>Happy / Relaxed Body Language</h3>
-                </div>
-                <div class="kawaii-panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="kawaii-list">
-                                <li>Eyes: Round or partially closed, pupils narrow like slits, blinks slowly at you ("cat kisses" of trust)</li>
-                                <li>Ears: Upright and forward facing</li>
-                                <li>Tail: Pointed straight up, may sway gently like a metronome</li>
-                                <li>Body: Rolling belly-up, stretching out fully, kneading ("making biscuits" with paws)</li>
-                                <li>Face: Cheek rubbing</li>
-                                <li>Sound: Gentle purring, short and melodic meows</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="kawaii-illustration">
-                                <img src="{{ url_for('static', filename='images/happy-cat-detail.png') }}" alt="Happy Cat Illustration" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <h4 class="kawaii-subtitle">10 Signs I Trust and Like You</h4>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="kawaii-list heart-list">
-                                    <li>Slow Blinking</li>
-                                    <li>Headbutting</li>
-                                    <li>Tail Wrapping</li>
-                                    <li>Kneading</li>
-                                    <li>Showing Belly</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="kawaii-list heart-list">
-                                    <li>Purring</li>
-                                    <li>Grooming / Licking</li>
-                                    <li>Greeting You at the Door</li>
-                                    <li>Following You Everywhere</li>
-                                    <li>Sleeping Next To You</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="neko-teacher">
-                                <img src="{{ url_for('static', filename='images/neko-happy.png') }}" alt="Happy Neko" class="neko-teacher-img small">
-                                <div class="speech-bubble">
-                                    <p>When I knead you, it can be a sign of affection. Kneading is a behavior that I performed as a kitten with my mother.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="neko-teacher">
-                                <img src="{{ url_for('static', filename='images/neko-purring.png') }}" alt="Purring Neko" class="neko-teacher-img small">
-                                <div class="speech-bubble">
-                                    <p>Purring has mostly been associated with contentment, excitement, or other positive emotional states. However, I can also purr in stressful situations. It's important to watch my body language as well as looking at the context.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}
+
