@@ -32,10 +32,10 @@
             </div>
             <div class="kawaii-body" 
                  style="background-image: url('{{ url_for('static', filename='images/' + scenario['cat-image']) }}');
-                        top: {{ scenario['image-contrl']['top'] }};
-                        left: {{ scenario['image-contrl']['left'] }};
-                        width: {{ scenario['image-contrl']['width'] }};
-                        height: {{ scenario['image-contrl']['height'] }};">
+                        top: {{ scenario['image-ctrl']['top'] }};
+                        left: {{ scenario['image-ctrl']['left'] }};
+                        width: {{ scenario['image-ctrl']['width'] }};
+                        height: {{ scenario['image-ctrl']['height'] }};">
                 {% if scenario['ear'] %}
                     <div class="click-zone ear" 
                          data-part="ear" 
