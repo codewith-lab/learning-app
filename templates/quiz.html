@@ -1,22 +1,22 @@
 {% extends "layout.html" %}
 
-{% block title %}Quiz{% endblock %}
+{% block title %}{{ quiz.title }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Cat Body Language Quiz</h2>
+    <h2 class="mb-4 text-center">{{ quiz.title }}</h2>
     
     <div class="card mb-4">
         <div class="card-body">
             <!-- Drag and Drop Cat Images Section -->
             <div class="mb-5">
-                <h4 class="mb-3">Drag each cat image to the correct category based on their body language</h4>
+                <h4 class="mb-3">{{ quiz.drag_drop.title }}</h4>
                 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="card h-100">
-                            <div class="card-header bg-success text-white">
-                                <h5 class="mb-0">Positive/Happy Body Language</h5>
+                            <div class="card-header {{ quiz.drag_drop.categories.positive.style }} text-white">
+                                <h5 class="mb-0">{{ quiz.drag_drop.categories.positive.title }}</h5>
                             </div>
                             <div class="card-body dropzone" id="positive-dropzone">
                                 <p class="text-muted text-center dropzone-placeholder">Drop happy cats here</p>
@@ -25,8 +25,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="card h-100">
-                            <div class="card-header bg-danger text-white">
-                                <h5 class="mb-0">Negative/Stressed Body Language</h5>
+                            <div class="card-header {{ quiz.drag_drop.categories.negative.style }} text-white">
+                                <h5 class="mb-0">{{ quiz.drag_drop.categories.negative.title }}</h5>
                             </div>
                             <div class="card-body dropzone" id="negative-dropzone">
                                 <p class="text-muted text-center dropzone-placeholder">Drop stressed cats here</p>
@@ -36,157 +36,32 @@
                 </div>
                 
                 <div class="drag-container d-flex flex-wrap justify-content-center gap-3 mb-3">
-                    <div class="draggable-item" draggable="true" data-category="positive">
-                        <img src="{{ url_for('static', filename='images/happy-cat.png') }}" class="cat-image" alt="Cat with upright tail">
-                        <div class="cat-caption">Cat with upright tail</div>
+                    {% for item in quiz.drag_drop.drag_items %}
+                    <div class="draggable-item" draggable="true" data-category="{{ item.category }}">
+                        <img src="{{ url_for('static', filename='images/' + item.image) }}" class="cat-image" alt="{{ item.caption }}">
+                        <div class="cat-caption">{{ item.caption }}</div>
                     </div>
-                    <div class="draggable-item" draggable="true" data-category="negative">
-                        <img src="{{ url_for('static', filename='images/stressed-cat.png') }}" class="cat-image" alt="Cat with flattened ears">
-                        <div class="cat-caption">Cat with flattened ears</div>
-                    </div>
-                    <div class="draggable-item" draggable="true" data-category="positive">
-                        <img src="{{ url_for('static', filename='images/playful-cat.png') }}" class="cat-image" alt="Cat kneading with paws">
-                        <div class="cat-caption">Cat kneading with paws</div>
-                    </div>
-                    <div class="draggable-item" draggable="true" data-category="negative">
-                        <img src="{{ url_for('static', filename='images/sick-cat.png') }}" class="cat-image" alt="Cat with tail tucked">
-                        <div class="cat-caption">Cat with tail tucked</div>
-                    </div>
+                    {% endfor %}
                 </div>
                 
                 <div class="alert alert-info" id="drag-drop-feedback" style="display:none;"></div>
             </div>
             
             <form id="quizForm" action="{{ url_for('submit_answer') }}" method="post">
-                <!-- Question 1 -->
-                <div class="mb-4 question-container" id="q1-container">
-                    <h5>1. Which tail position indicates a happy, confident cat?</h5>
+                {% for question in quiz.questions %}
+                <!-- Question {{ loop.index }} -->
+                <div class="mb-4 question-container" id="{{ question.id }}-container">
+                    <h5>{{ loop.index }}. {{ question.question }}</h5>
+                    {% for option in question.options %}
                     <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q1" id="q1a" value="a" data-correct="false">
-                        <label class="form-check-label" for="q1a">Tucked between legs</label>
+                        <input class="form-check-input answer-option" type="radio" name="{{ question.id }}" id="{{ question.id }}{{ option.id }}" value="{{ option.id }}" data-correct="{{ option.correct|lower }}">
+                        <label class="form-check-label" for="{{ question.id }}{{ option.id }}">{{ option.text }}</label>
                         <span class="feedback-icon"></span>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q1" id="q1b" value="b" data-correct="false">
-                        <label class="form-check-label" for="q1b">Puffed up and bristled</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q1" id="q1c" value="c" data-correct="true">
-                        <label class="form-check-label" for="q1c">Upright with a slight curl at the tip</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q1" id="q1d" value="d" data-correct="false">
-                        <label class="form-check-label" for="q1d">Thrashing from side to side</label>
-                        <span class="feedback-icon"></span>
-                    </div>
+                    {% endfor %}
                     <div class="feedback-text mt-2" style="display: none;"></div>
                 </div>
-
-                <!-- Question 2 -->
-                <div class="mb-4 question-container" id="q2-container">
-                    <h5>2. When a cat's ears are flattened against their head, it usually means:</h5>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q2" id="q2a" value="a" data-correct="false">
-                        <label class="form-check-label" for="q2a">They're happy</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q2" id="q2b" value="b" data-correct="true">
-                        <label class="form-check-label" for="q2b">They're afraid or angry</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q2" id="q2c" value="c" data-correct="false">
-                        <label class="form-check-label" for="q2c">They're curious</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q2" id="q2d" value="d" data-correct="false">
-                        <label class="form-check-label" for="q2d">They're sleepy</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="feedback-text mt-2" style="display: none;"></div>
-                </div>
-
-                <!-- Question 3 -->
-                <div class="mb-4 question-container" id="q3-container">
-                    <h5>3. Slow blinking from a cat is often a sign of:</h5>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q3" id="q3a" value="a" data-correct="false">
-                        <label class="form-check-label" for="q3a">Boredom</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q3" id="q3b" value="b" data-correct="false">
-                        <label class="form-check-label" for="q3b">Hunger</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q3" id="q3c" value="c" data-correct="true">
-                        <label class="form-check-label" for="q3c">Trust and affection</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q3" id="q3d" value="d" data-correct="false">
-                        <label class="form-check-label" for="q3d">Irritation</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="feedback-text mt-2" style="display: none;"></div>
-                </div>
-
-                <!-- Question 4 -->
-                <div class="mb-4 question-container" id="q4-container">
-                    <h5>4. A cat crouched low to the ground with dilated pupils is likely:</h5>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q4" id="q4a" value="a" data-correct="false">
-                        <label class="form-check-label" for="q4a">Ready to pounce in play</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q4" id="q4b" value="b" data-correct="true">
-                        <label class="form-check-label" for="q4b">Feeling stressed or fearful</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q4" id="q4c" value="c" data-correct="false">
-                        <label class="form-check-label" for="q4c">Looking for attention</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q4" id="q4d" value="d" data-correct="false">
-                        <label class="form-check-label" for="q4d">Feeling sick</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="feedback-text mt-2" style="display: none;"></div>
-                </div>
-
-                <!-- Question 5 -->
-                <div class="mb-4 question-container" id="q5-container">
-                    <h5>5. Kneading behavior (pushing paws against a soft surface) in cats originates from:</h5>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q5" id="q5a" value="a" data-correct="false">
-                        <label class="form-check-label" for="q5a">Marking territory</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q5" id="q5b" value="b" data-correct="true">
-                        <label class="form-check-label" for="q5b">Nursing behavior as kittens</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q5" id="q5c" value="c" data-correct="false">
-                        <label class="form-check-label" for="q5c">Stretching muscles</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input answer-option" type="radio" name="q5" id="q5d" value="d" data-correct="false">
-                        <label class="form-check-label" for="q5d">Learned from watching humans</label>
-                        <span class="feedback-icon"></span>
-                    </div>
-                    <div class="feedback-text mt-2" style="display: none;"></div>
-                </div>
+                {% endfor %}
 
                 <div class="mt-4 text-center">
                     <button type="submit" class="btn btn-primary">Submit Quiz</button>
@@ -335,8 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         item.addEventListener('dragend', function() {
             this.classList.remove('dragging');
-            // Remove immediate feedback
-            // checkDragAndDropCompletion();
         });
     });
     
@@ -410,13 +283,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Display feedback
+        // Display feedback from backend data
         if (dragDropScore === totalDragItems) {
             dragDropFeedback.className = 'alert alert-success';
-            dragDropFeedback.innerHTML = 'Great job! You correctly categorized all the cats based on their body language!';
+            dragDropFeedback.innerHTML = '{{ quiz.drag_drop.feedback.success }}';
         } else {
             dragDropFeedback.className = 'alert alert-danger';
-            dragDropFeedback.innerHTML = `You got ${dragDropScore}/${totalDragItems} cats correct. Green borders indicate correct placements, red borders indicate incorrect placements.`;
+            dragDropFeedback.innerHTML = '{{ quiz.drag_drop.feedback.error }}'.replace('{score}', dragDropScore).replace('{total}', totalDragItems);
         }
         
         dragDropFeedback.style.display = 'block';
@@ -424,29 +297,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return dragDropScore;
     }
     
-    // Feedback texts for each question
-    const feedbackTexts = {
-        q1: {
-            correct: "Correct! A tail held high with a slight curl at the tip is a sign of a happy, confident cat.",
-            incorrect: "Not quite. A happy, confident cat holds its tail upright with a slight curl at the tip."
-        },
-        q2: {
-            correct: "Correct! Flattened ears indicate fear or anger in cats.",
-            incorrect: "That's not right. When a cat flattens its ears against its head, it's usually afraid or angry."
-        },
-        q3: {
-            correct: "Correct! Slow blinking is a sign of trust and affection, sometimes called 'cat kisses'.",
-            incorrect: "Not quite. Slow blinking from a cat is a sign of trust and affection, often called 'cat kisses'."
-        },
-        q4: {
-            correct: "Correct! A crouched position with dilated pupils typically indicates stress or fear.",
-            incorrect: "That's not right. A cat crouched low with dilated pupils is usually feeling stressed or fearful."
-        },
-        q5: {
-            correct: "Correct! Kneading behavior originates from kittenhood when they knead their mother's belly while nursing.",
-            incorrect: "Not quite. Kneading comes from nursing behavior as kittens."
-        }
-    };
+    // Feedback texts for each question - now from backend data
+    const feedbackTexts = JSON.parse('{{ quiz.questions|tojson|safe }}').reduce((acc, q) => {
+        acc[q.id] = {
+            correct: q.feedback.correct,
+            incorrect: q.feedback.incorrect
+        };
+        return acc;
+    }, {});
     
     // Update progress - no longer needed since we removed the progress bar
     function updateProgress() {
@@ -466,47 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 questionContainer.classList.add('answered');
             }
             
-            // Remove immediate feedback
-            /*
-            const feedbackTextElement = questionContainer.querySelector('.feedback-text');
-            const allOptions = questionContainer.querySelectorAll('.form-check');
-            const isCorrect = this.getAttribute('data-correct') === 'true';
-            
-            // Reset all options
-            allOptions.forEach(option => {
-                option.classList.remove('correct-answer', 'incorrect-answer');
-                const icon = option.querySelector('.feedback-icon');
-                icon.innerHTML = '';
-            });
-            
-            // Add appropriate class and icon to selected option
-            const selectedOption = this.parentElement;
-            if (isCorrect) {
-                selectedOption.classList.add('correct-answer');
-                selectedOption.querySelector('.feedback-icon').innerHTML = '✓';
-                feedbackTextElement.textContent = feedbackTexts[questionName].correct;
-                feedbackTextElement.classList.add('correct-feedback');
-                feedbackTextElement.classList.remove('incorrect-feedback');
-            } else {
-                selectedOption.classList.add('incorrect-answer');
-                selectedOption.querySelector('.feedback-icon').innerHTML = '✗';
-                feedbackTextElement.textContent = feedbackTexts[questionName].incorrect;
-                feedbackTextElement.classList.add('incorrect-feedback');
-                feedbackTextElement.classList.remove('correct-feedback');
-                
-                // Show the correct answer
-                allOptions.forEach(option => {
-                    const input = option.querySelector('input');
-                    if (input.getAttribute('data-correct') === 'true') {
-                        option.classList.add('correct-answer');
-                        option.querySelector('.feedback-icon').innerHTML = '✓';
-                    }
-                });
-            }
-            
-            // Show feedback text
-            feedbackTextElement.style.display = 'block';
-            */
+            // Removed immediate feedback code (commented out)
         });
     });
 
@@ -541,14 +359,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Combine the items for tracking
         const dragDropSelections = [...positiveItems, ...negativeItems];
         
-        // Check multiple choice answers
-        const answers = {
-            q1: 'c',
-            q2: 'b',
-            q3: 'c',
-            q4: 'b', 
-            q5: 'b'
-        };
+        // Check multiple choice answers using backend data
+        const answers = JSON.parse('{{ quiz.answer_key|tojson|safe }}');
         
         let mcScore = 0;
         let mcTotal = Object.keys(answers).length;

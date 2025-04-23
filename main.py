@@ -125,6 +125,166 @@ scenarios = {
     "prev": "3"
   },
 }
+
+# Quiz Data Structure
+quiz_data = {
+    "title": "Cat Body Language Quiz",
+    "drag_drop": {
+        "title": "Drag each cat image to the correct category based on their body language",
+        "categories": {
+            "positive": {
+                "title": "Positive/Happy Body Language",
+                "style": "bg-success"
+            },
+            "negative": {
+                "title": "Negative/Stressed Body Language",
+                "style": "bg-danger"
+            }
+        },
+        "drag_items": [
+            {
+                "id": "happy-cat",
+                "image": "happy-cat.png",
+                "caption": "Cat with upright tail",
+                "category": "positive"
+            },
+            {
+                "id": "stressed-cat",
+                "image": "stressed-cat.png",
+                "caption": "Cat with flattened ears",
+                "category": "negative"
+            },
+            {
+                "id": "playful-cat",
+                "image": "playful-cat.png",
+                "caption": "Cat kneading with paws",
+                "category": "positive"
+            },
+            {
+                "id": "sick-cat",
+                "image": "sick-cat.png",
+                "caption": "Cat with tail tucked",
+                "category": "negative"
+            }
+        ],
+        "feedback": {
+            "success": "Great job! You correctly categorized all the cats based on their body language!",
+            "error": "You got {score}/{total} cats correct. Green borders indicate correct placements, red borders indicate incorrect placements."
+        }
+    },
+    "questions": [
+        {
+            "id": "q1",
+            "question": "Which tail position indicates a happy, confident cat?",
+            "options": [
+                {"id": "a", "text": "Tucked between legs", "correct": False},
+                {"id": "b", "text": "Puffed up and bristled", "correct": False},
+                {"id": "c", "text": "Upright with a slight curl at the tip", "correct": True},
+                {"id": "d", "text": "Thrashing from side to side", "correct": False}
+            ],
+            "feedback": {
+                "correct": "Correct! A tail held high with a slight curl at the tip is a sign of a happy, confident cat.",
+                "incorrect": "Not quite. A happy, confident cat holds its tail upright with a slight curl at the tip."
+            }
+        },
+        {
+            "id": "q2",
+            "question": "When a cat's ears are flattened against their head, it usually means:",
+            "options": [
+                {"id": "a", "text": "They're happy", "correct": False},
+                {"id": "b", "text": "They're afraid or angry", "correct": True},
+                {"id": "c", "text": "They're curious", "correct": False},
+                {"id": "d", "text": "They're sleepy", "correct": False}
+            ],
+            "feedback": {
+                "correct": "Correct! Flattened ears indicate fear or anger in cats.",
+                "incorrect": "That's not right. When a cat flattens its ears against its head, it's usually afraid or angry."
+            }
+        },
+        {
+            "id": "q3",
+            "question": "Slow blinking from a cat is often a sign of:",
+            "options": [
+                {"id": "a", "text": "Boredom", "correct": False},
+                {"id": "b", "text": "Hunger", "correct": False},
+                {"id": "c", "text": "Trust and affection", "correct": True},
+                {"id": "d", "text": "Irritation", "correct": False}
+            ],
+            "feedback": {
+                "correct": "Correct! Slow blinking is a sign of trust and affection, sometimes called 'cat kisses'.",
+                "incorrect": "Not quite. Slow blinking from a cat is a sign of trust and affection, often called 'cat kisses'."
+            }
+        },
+        {
+            "id": "q4",
+            "question": "A cat crouched low to the ground with dilated pupils is likely:",
+            "options": [
+                {"id": "a", "text": "Ready to pounce in play", "correct": False},
+                {"id": "b", "text": "Feeling stressed or fearful", "correct": True},
+                {"id": "c", "text": "Looking for attention", "correct": False},
+                {"id": "d", "text": "Feeling sick", "correct": False}
+            ],
+            "feedback": {
+                "correct": "Correct! A crouched position with dilated pupils typically indicates stress or fear.",
+                "incorrect": "That's not right. A cat crouched low with dilated pupils is usually feeling stressed or fearful."
+            }
+        },
+        {
+            "id": "q5",
+            "question": "Kneading behavior (pushing paws against a soft surface) in cats originates from:",
+            "options": [
+                {"id": "a", "text": "Marking territory", "correct": False},
+                {"id": "b", "text": "Nursing behavior as kittens", "correct": True},
+                {"id": "c", "text": "Stretching muscles", "correct": False},
+                {"id": "d", "text": "Learned from watching humans", "correct": False}
+            ],
+            "feedback": {
+                "correct": "Correct! Kneading behavior originates from kittenhood when they knead their mother's belly while nursing.",
+                "incorrect": "Not quite. Kneading comes from nursing behavior as kittens."
+            }
+        }
+    ],
+    "answer_key": {
+        "q1": "c",
+        "q2": "b",
+        "q3": "c",
+        "q4": "b",
+        "q5": "b"
+    },
+    "results": {
+        "key_takeaways": [
+            "A happy cat holds its tail upright with a slight curl at the tip",
+            "Flattened ears indicate fear or anger in cats",
+            "Slow blinking is a sign of trust and affection (\"cat kisses\")",
+            "A crouched position with dilated pupils typically indicates stress or fear",
+            "Kneading behavior originates from nursing as kittens"
+        ],
+        "feedback_levels": [
+            {
+                "min_percentage": 80,
+                "title": "Excellent!",
+                "message": "You have a great understanding of cat body language!",
+                "image": "happy-cat.png",
+                "style": "alert-success"
+            },
+            {
+                "min_percentage": 60,
+                "title": "Good job!",
+                "message": "You understand the basics of cat body language.",
+                "image": "playful-cat.png",
+                "style": "alert-info"
+            },
+            {
+                "min_percentage": 0,
+                "title": "Keep learning!",
+                "message": "You might want to review the cat body language tutorials again.",
+                "image": "stressed-cat.png",
+                "style": "alert-warning"
+            }
+        ]
+    }
+}
+
 # Database setup
 def get_db_connection():
     conn = sqlite3.connect('cat_tutorial.db')
@@ -188,7 +348,7 @@ def quiz():
     # Initialize quiz session
     session['quiz_answers'] = {}
     session['quiz_started'] = True
-    return render_template('quiz.html')
+    return render_template('quiz.html', quiz=quiz_data)
 
 @app.route('/quiz/<part>')
 def quiz_part(part):
@@ -250,7 +410,8 @@ def quiz_result():
     return render_template('quiz_result.html', 
                           score=score, 
                           total=total,
-                          percentage=percentage)
+                          percentage=percentage,
+                          quiz=quiz_data)
 
 @app.route('/about')
 def about():
