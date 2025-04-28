@@ -129,52 +129,56 @@ scenarios = {
 # Quiz Data Structure
 quiz_data = {
     "title": "Cat Body Language Quiz",
-    "drag_drop": {
-        "title": "Drag each cat image to the correct category based on their body language",
-        "categories": {
-            "positive": {
-                "title": "Positive/Happy Body Language",
-                "style": "bg-success"
+    "steps": [
+        {
+            "id": "drag_drop",
+            "type": "drag_drop",
+            "title": "Drag and Drop",
+            "instruction": "Drag each cat image to the correct category based on their body language",
+            "categories": {
+                "positive": {
+                    "title": "Positive/Happy Body Language",
+                    "style": "bg-success"
+                },
+                "negative": {
+                    "title": "Negative/Stressed Body Language",
+                    "style": "bg-danger"
+                }
             },
-            "negative": {
-                "title": "Negative/Stressed Body Language",
-                "style": "bg-danger"
+            "drag_items": [
+                {
+                    "id": "happy-cat",
+                    "image": "happy-cat.png",
+                    "caption": "Cat with upright tail",
+                    "category": "positive"
+                },
+                {
+                    "id": "stressed-cat",
+                    "image": "stressed-cat.png",
+                    "caption": "Cat with flattened ears",
+                    "category": "negative"
+                },
+                {
+                    "id": "playful-cat",
+                    "image": "playful-cat.png",
+                    "caption": "Cat kneading with paws",
+                    "category": "positive"
+                },
+                {
+                    "id": "sick-cat",
+                    "image": "sick-cat.png",
+                    "caption": "Cat with tail tucked",
+                    "category": "negative"
+                }
+            ],
+            "feedback": {
+                "success": "Great job! You correctly categorized all the cats based on their body language!",
+                "error": "You got {score}/{total} cats correct. Green borders indicate correct placements, red borders indicate incorrect placements."
             }
         },
-        "drag_items": [
-            {
-                "id": "happy-cat",
-                "image": "happy-cat.png",
-                "caption": "Cat with upright tail",
-                "category": "positive"
-            },
-            {
-                "id": "stressed-cat",
-                "image": "stressed-cat.png",
-                "caption": "Cat with flattened ears",
-                "category": "negative"
-            },
-            {
-                "id": "playful-cat",
-                "image": "playful-cat.png",
-                "caption": "Cat kneading with paws",
-                "category": "positive"
-            },
-            {
-                "id": "sick-cat",
-                "image": "sick-cat.png",
-                "caption": "Cat with tail tucked",
-                "category": "negative"
-            }
-        ],
-        "feedback": {
-            "success": "Great job! You correctly categorized all the cats based on their body language!",
-            "error": "You got {score}/{total} cats correct. Green borders indicate correct placements, red borders indicate incorrect placements."
-        }
-    },
-    "questions": [
         {
             "id": "q1",
+            "type": "multiple_choice",
             "question": "Which tail position indicates a happy, confident cat?",
             "options": [
                 {"id": "a", "text": "Tucked between legs", "correct": False},
@@ -189,6 +193,7 @@ quiz_data = {
         },
         {
             "id": "q2",
+            "type": "multiple_choice",
             "question": "When a cat's ears are flattened against their head, it usually means:",
             "options": [
                 {"id": "a", "text": "They're happy", "correct": False},
@@ -203,6 +208,7 @@ quiz_data = {
         },
         {
             "id": "q3",
+            "type": "multiple_choice",
             "question": "Slow blinking from a cat is often a sign of:",
             "options": [
                 {"id": "a", "text": "Boredom", "correct": False},
@@ -217,6 +223,7 @@ quiz_data = {
         },
         {
             "id": "q4",
+            "type": "multiple_choice",
             "question": "A cat crouched low to the ground with dilated pupils is likely:",
             "options": [
                 {"id": "a", "text": "Ready to pounce in play", "correct": False},
@@ -231,6 +238,7 @@ quiz_data = {
         },
         {
             "id": "q5",
+            "type": "multiple_choice",
             "question": "Kneading behavior (pushing paws against a soft surface) in cats originates from:",
             "options": [
                 {"id": "a", "text": "Marking territory", "correct": False},
@@ -320,7 +328,7 @@ def tutorial():
 @app.route('/tutorial/<category>')
 def tutorial_category(category):
     if category == 'end':
-        return render_template('quiz.html')
+        return redirect(url_for('quiz'))
     if category == 'begin':
         return render_template('index.html')
     
@@ -347,44 +355,101 @@ def tutorial_category(category):
 def quiz():
     # Initialize quiz session
     session['quiz_answers'] = {}
+    session['current_step'] = 0
     session['quiz_started'] = True
-    return render_template('quiz.html', quiz=quiz_data)
+    session['quiz_score'] = 0
+    
+    # Redirect to the first step of the quiz
+    return redirect(url_for('quiz_step', step_id=quiz_data['steps'][0]['id']))
 
-@app.route('/quiz/<part>')
-def quiz_part(part):
+@app.route('/quiz/step/<step_id>', methods=['GET'])
+def quiz_step(step_id):
     if not session.get('quiz_started', False):
         return redirect(url_for('quiz'))
     
-    return render_template('quiz_part.html', part=part)
+    # Find current step data
+    current_step = None
+    step_index = 0
+    for i, step in enumerate(quiz_data['steps']):
+        if step['id'] == step_id:
+            current_step = step
+            step_index = i
+            break
+    
+    if not current_step:
+        return redirect(url_for('quiz'))
+    
+    # Determine next and previous steps
+    next_step = None
+    prev_step = None
+    if step_index < len(quiz_data['steps']) - 1:
+        next_step = quiz_data['steps'][step_index + 1]['id']
+    if step_index > 0:
+        prev_step = quiz_data['steps'][step_index - 1]['id']
+    
+    # Store current step in session
+    session['current_step'] = step_index
+    
+    # Render appropriate template based on step type
+    if current_step['type'] == 'drag_drop':
+        return render_template('quiz_drag_drop.html', 
+                              quiz=quiz_data, 
+                              step=current_step,
+                              next_step=next_step,
+                              prev_step=prev_step)
+    else:  # multiple_choice
+        return render_template('quiz_question.html', 
+                              quiz=quiz_data, 
+                              step=current_step,
+                              next_step=next_step,
+                              prev_step=prev_step)
 
-@app.route('/submit_answer', methods=['POST'])
-def submit_answer():
+@app.route('/quiz/submit_step/<step_id>', methods=['POST'])
+def submit_step(step_id):
     if not session.get('quiz_started', False):
         return jsonify({'status': 'error', 'message': 'Quiz not started'})
     
     data = request.get_json()
-    score = data.get('score', 0)
-    total = data.get('total', 0)
-    answers = data.get('answers', {})
-    drag_drop_selections = data.get('dragDropSelections', [])
     
-    # Store results in session
-    session['quiz_score'] = score
-    session['quiz_total'] = total
+    # Store answer in session
+    answers = session.get('quiz_answers', {})
+    answers[step_id] = data
     session['quiz_answers'] = answers
-    session['drag_drop_selections'] = drag_drop_selections
-    session.modified = True
     
-    # Save to database
+    # Update score if answer is correct
+    if 'is_correct' in data and data['is_correct']:
+        session['quiz_score'] = session.get('quiz_score', 0) + 1
+    
+    # Find next step
+    current_step_index = 0
+    for i, step in enumerate(quiz_data['steps']):
+        if step['id'] == step_id:
+            current_step_index = i
+            break
+    
+    # Determine if this is the last step
+    if current_step_index >= len(quiz_data['steps']) - 1:
+        return jsonify({'status': 'success', 'next': url_for('quiz_result')})
+    else:
+        next_step_id = quiz_data['steps'][current_step_index + 1]['id']
+        return jsonify({'status': 'success', 'next': url_for('quiz_step', step_id=next_step_id)})
+
+@app.route('/quiz/result')
+def quiz_result():
+    if not session.get('quiz_started', False):
+        return redirect(url_for('quiz'))
+    
+    # Calculate total score
+    all_answers = session.get('quiz_answers', {})
+    total = len(quiz_data['steps'])
+    score = session.get('quiz_score', 0)
+    
+    percentage = (score / total * 100) if total > 0 else 0
+    
+    # Save results to database
     conn = get_db_connection()
     user_id = session.get('user_id', os.urandom(8).hex())
     session['user_id'] = user_id
-    
-    # Store all the data as JSON
-    all_answers = {
-        'multiple_choice': answers,
-        'drag_drop': drag_drop_selections
-    }
     
     conn.execute(
         'INSERT INTO quiz_results (user_id, score, total, answers, timestamp) VALUES (?, ?, ?, ?, ?)',
@@ -392,17 +457,6 @@ def submit_answer():
     )
     conn.commit()
     conn.close()
-    
-    return jsonify({'status': 'success'})
-
-@app.route('/quiz/result')
-def quiz_result():
-    if not session.get('quiz_started', False):
-        return redirect(url_for('quiz'))
-    
-    score = session.get('quiz_score', 0)
-    total = session.get('quiz_total', 0)
-    percentage = (score / total * 100) if total > 0 else 0
     
     # Clear quiz session
     session['quiz_started'] = False

@@ -1,0 +1,286 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ quiz.title }} - Drag and Drop{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">{{ quiz.title }}</h2>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">{{ step.title }}</h3>
+        </div>
+        <div class="card-body">
+            <!-- Drag and Drop Cat Images Section -->
+            <div class="mb-4">
+                <h4 class="mb-3">{{ step.instruction }}</h4>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">{{ step.categories.positive.title }}</h5>
+                            </div>
+                            <div class="card-body dropzone" id="positive-dropzone">
+                                <p class="text-muted text-center dropzone-placeholder">Drop happy cats here</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-dark text-white">
+                                <h5 class="mb-0">{{ step.categories.negative.title }}</h5>
+                            </div>
+                            <div class="card-body dropzone" id="negative-dropzone">
+                                <p class="text-muted text-center dropzone-placeholder">Drop stressed cats here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="drag-container d-flex flex-wrap justify-content-center gap-3 mb-3">
+                    {% for item in step.drag_items %}
+                    <div class="draggable-item" draggable="true" data-category="{{ item.category }}" data-id="{{ item.id }}">
+                        <img src="{{ url_for('static', filename='images/' + item.image) }}" class="cat-image" alt="{{ item.caption }}">
+                        <div class="cat-caption">{{ item.caption }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div id="result-message" style="display: none; margin-top: 15px;"></div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                {% if prev_step %}
+                <a href="{{ url_for('quiz_step', step_id=prev_step) }}" class="btn btn-outline-primary">&larr; Previous</a>
+                {% else %}
+                <div></div>
+                {% endif %}
+                <button id="check-button" class="btn btn-primary">Check Answers</button>
+                <button id="continue-button" class="btn btn-success" style="display: none;">Continue &rarr;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.draggable-item {
+    cursor: grab;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 140px;
+    transition: all 0.2s ease;
+}
+
+.draggable-item.dragging {
+    opacity: 0.7;
+}
+
+.draggable-item.correct {
+    border: 2px solid #28a745;
+}
+
+.draggable-item.incorrect {
+    border: 2px solid #dc3545;
+}
+
+.cat-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+
+.cat-caption {
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.dropzone {
+    min-height: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    padding: 15px;
+}
+
+.dropzone.hover {
+    background-color: #f8f9fa;
+}
+
+.dropzone-placeholder {
+    margin: 0;
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.dropzone .draggable-item {
+    margin: 5px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const draggableItems = document.querySelectorAll('.draggable-item');
+    const dropzones = document.querySelectorAll('.dropzone');
+    const resultMessage = document.getElementById('result-message');
+    const checkButton = document.getElementById('check-button');
+    const continueButton = document.getElementById('continue-button');
+    let draggedItem = null;
+    
+    // Add drag event listeners to draggable items
+    draggableItems.forEach(item => {
+        item.addEventListener('dragstart', function() {
+            this.classList.add('dragging');
+            draggedItem = this;
+        });
+        
+        item.addEventListener('dragend', function() {
+            this.classList.remove('dragging');
+        });
+    });
+    
+    // Add drop event listeners to dropzones
+    dropzones.forEach(zone => {
+        zone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('hover');
+        });
+        
+        zone.addEventListener('dragleave', function() {
+            this.classList.remove('hover');
+        });
+        
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('hover');
+            
+            if (draggedItem) {
+                // Check if placeholder needs to be removed
+                const placeholder = this.querySelector('.dropzone-placeholder');
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                }
+                
+                // Add to new dropzone
+                this.appendChild(draggedItem);
+            }
+        });
+    });
+    
+    // Handle check button click
+    checkButton.addEventListener('click', function() {
+        const positiveDropzone = document.getElementById('positive-dropzone');
+        const negativeDropzone = document.getElementById('negative-dropzone');
+        
+        // Count items in each zone
+        const positiveItems = positiveDropzone.querySelectorAll('.draggable-item');
+        const negativeItems = negativeDropzone.querySelectorAll('.draggable-item');
+        
+        // Calculate score
+        let score = 0;
+        let total = draggableItems.length;
+        
+        // Clear previous classes
+        draggableItems.forEach(item => {
+            item.classList.remove('correct', 'incorrect');
+        });
+        
+        // Check positive items
+        positiveItems.forEach(item => {
+            const isCorrect = item.dataset.category === 'positive';
+            if (isCorrect) score++;
+            item.classList.add(isCorrect ? 'correct' : 'incorrect');
+        });
+        
+        // Check negative items
+        negativeItems.forEach(item => {
+            const isCorrect = item.dataset.category === 'negative';
+            if (isCorrect) score++;
+            item.classList.add(isCorrect ? 'correct' : 'incorrect');
+        });
+        
+        // Show result
+        resultMessage.textContent = `You got ${score} out of ${total} correct.`;
+        resultMessage.style.display = 'block';
+        resultMessage.style.padding = '10px';
+        resultMessage.style.borderRadius = '5px';
+        resultMessage.style.backgroundColor = '#f8f9fa';
+        resultMessage.style.border = '1px solid #ddd';
+        
+        // Show continue button, hide check button
+        checkButton.style.display = 'none';
+        continueButton.style.display = 'block';
+    });
+    
+    // Handle continue button click
+    continueButton.addEventListener('click', function() {
+        const positiveDropzone = document.getElementById('positive-dropzone');
+        const negativeDropzone = document.getElementById('negative-dropzone');
+        
+        // Prepare data
+        const positiveItems = positiveDropzone.querySelectorAll('.draggable-item');
+        const negativeItems = negativeDropzone.querySelectorAll('.draggable-item');
+        
+        let score = 0;
+        let total = draggableItems.length;
+        const selections = [];
+        
+        // Process positive items
+        positiveItems.forEach(item => {
+            const isCorrect = item.dataset.category === 'positive';
+            if (isCorrect) score++;
+            
+            selections.push({
+                id: item.dataset.id,
+                category: 'positive',
+                correctCategory: item.dataset.category,
+                isCorrect: isCorrect
+            });
+        });
+        
+        // Process negative items
+        negativeItems.forEach(item => {
+            const isCorrect = item.dataset.category === 'negative';
+            if (isCorrect) score++;
+            
+            selections.push({
+                id: item.dataset.id,
+                category: 'negative',
+                correctCategory: item.dataset.category,
+                isCorrect: isCorrect
+            });
+        });
+        
+        // Send data
+        const result = {
+            score: score,
+            total: total,
+            selections: selections,
+            is_correct: score === total
+        };
+        
+        fetch('{{ url_for("submit_step", step_id=step.id) }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(result),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = data.next;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
