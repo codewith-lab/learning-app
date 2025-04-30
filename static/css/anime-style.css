@@ -3,8 +3,9 @@
 /* Global Styles */
 :root {
   --primary-color: black;
-  --secondary-color: #576574;
-  --accent-color: #ffbe76;
+  --secondary-color:  rgb(212, 210, 210);
+  --accent-color: #ffecdf;
+  --base-color: #fffdf6;
   --text-color: #576574;
   --light-color: #f7f1e3;
   --dark-color: #2c3e50;
@@ -17,17 +18,16 @@
 }
 
 body {
-  font-family: "Varela Round", "Poppins", sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", sans-serif;
   line-height: 1.6;
   color: var(--text-color);
-  background-color: #f9f7f7;
+  background-color: var(--base-color);
   background-image: url("../images/paw-pattern.png");
   background-size: 100px;
   background-repeat: repeat;
 }
 
 .kawaii-container {
-  background-color: rgba(255, 255, 255, 0.9);
   min-height: 100vh;
   position: relative;
   padding-bottom: 80px;
@@ -37,16 +37,16 @@ body {
 .kawaii-title {
   font-weight: 700;
   color: var(--primary-color);
-  text-shadow: 2px 2px 0 var(--secondary-color);
   padding-top: 4rem;
   text-decoration: none;
   text-align: center;
   margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 .kawaii-title.scenario {
-  margin-top: -2rem;
+  margin-top: -3rem;
 }
 
 .kawaii-subtitle {
@@ -59,7 +59,7 @@ body {
 
 /* Navigation */
 .navbar {
-  background-color: white;
+  background-color: var(--accent-color);
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   box-shadow: var(--box-shadow);
 }
@@ -69,6 +69,7 @@ body {
   color: var(--primary-color);
   display: flex;
   align-items: center;
+  font-size: 1rem;
 }
 
 .logo-img {
@@ -78,6 +79,7 @@ body {
 
 .nav-link {
   font-weight: 500;
+  font-size: 0.8rem;
   color: var(--text-color);
   margin: 0 5px;
   position: relative;
@@ -110,7 +112,7 @@ body {
   overflow: hidden;
   box-shadow: var(--box-shadow);
   transition: all 0.3s ease;
-  background-color: white;
+  background-color: var(--accent-color);
   margin-bottom: 20px;
   margin-top: 40px;
 }
@@ -153,7 +155,8 @@ body {
   display: inline-block;
   padding: 10px 20px;
   border-radius: 50px;
-  font-weight: 600;
+  font-weight: 400;
+  font-size: 0.8rem;
   text-decoration: none;
   text-align: center;
   transition: all 0.3s ease;
@@ -176,7 +179,7 @@ body {
       transform: scale(1);
   }
   100% {
-      transform: scale(1.3);
+      transform: scale(1.1);
   }
 }
 
@@ -206,13 +209,12 @@ body {
 
 .next-button,
 .back-button {
-  background-color: var(--light-color);
-  color: var(--text-color);
+  background-color: var(--accent-color);
+  color: var(--primary-color);
 }
 
-.back-button:hover {
-  background-color: #e6e0d2;
-  color: var(--text-color);
+.back-button:hover, .next-button:hover {
+  animation: scale 1s infinite alternate;
 }
 
 .info-button {
@@ -226,20 +228,61 @@ body {
 }
 
 /* Panels */
+.kawaii-stage {
+  padding-top: 2rem;
+  display: flex;
+}
+
+.stage-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  height: 100%;  
+  padding-top: 2rem;
+}
+
+.stage-icon {
+    width: 8rem; 
+    height: auto;
+    max-height: 10rem; 
+    display: block;
+    margin-bottom: -6rem;
+    margin-left: 0.8rem;
+}
+
+.stage-item {
+  position: relative;
+  padding: 0.5rem;
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  border: 2px solid var(--secondary-color);
+  border-radius: var(--border-radius);
+  width: 80%;
+  text-align: center;
+}
+
+.stage-item.active {
+  border-left: 0.2rem solid var(--primary-color);
+  background-color: var(--accent-color);
+  font-weight: 600;
+}
+
 .kawaii-panel {
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--box-shadow);
-  background-color: white;
 }
 
 .kawaii-panel.scenario {
   background-size: cover; 
   background-position: center;
   background-repeat: no-repeat; 
-  width: 100%;
-  height: 60rem;
-  margin-bottom: 2rem;
+  height:36rem;
+  width: 70%;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 .kawaii-panel-header {
@@ -253,30 +296,23 @@ body {
   padding: 20px;
 }
 
-.kawaii-panel.success .kawaii-panel-header {
-  background-color: var(--success-color);
-}
-
-.kawaii-panel.danger .kawaii-panel-header {
-  background-color: var(--danger-color);
-}
-
-.kawaii-panel.warning .kawaii-panel-header {
-  background-color: var(--warning-color);
-  color: var(--text-color);
-}
-
-.kawaii-panel.info .kawaii-panel-header {
-  background-color: var(--info-color);
-}
-
 .scenario-header {
-  margin-top: 2rem;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem; 
+  line-height: 1;
+}
+
+.scenario-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem; 
   line-height: 1;
+  width: 70%;
+  margin: 0 auto;
 }
 
 /* Click Zone*/
@@ -289,13 +325,16 @@ body {
 .click-zone {
   position: absolute;
   border-radius: 50%;
-  background-color:  var(--accent-color);
-  opacity: 0.5;
+  background-color:  var(--secondary-color);
+  opacity: 1;
   transform: translate(-50%, -50%);
   transition: all 0.3s;
   cursor: url('../../static/images/pointer-hover.png'), pointer;
 }
 
+.click-zone.explored {
+  background-color: var(--accent-color);
+}
 .ear {
   position: absolute;
   width: 2%;
@@ -339,6 +378,17 @@ body {
   height: 2%;
   border-radius: 50%;
 }
+
+.sound-icon {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+  font-size: 1.1em;
+}
+
+
+/* Practice Toggle */
 
 /* Lists */
 .kawaii-list {
@@ -438,7 +488,7 @@ body {
 }
 
 .speech-bubble.small {
-  max-width: 53%;
+  max-width: 32%;
   width: fit-content;
   padding-bottom: 2%;
 }
@@ -452,6 +502,7 @@ body {
 .speech-bubble-text.small {
   margin-left: -2%;
   text-align: left;
+  font-size: 0.8rem;
 }
 
 .speech-bubble::before {
@@ -466,12 +517,12 @@ body {
 
 .pointer-icon {
   flex-shrink: 0;
-  width: 4%;
-  height: 3%;
+  width: 7%;
+  height: 5%;
 }
 
-.speech-bubble-text.kawaii-behavior-highlight{
-  font-size: 1.8rem;
+.kawaii-behavior-highlight{
+  font-size: 1.3rem;
   margin-left: 0%;
 }
 
@@ -496,28 +547,7 @@ body {
   font-size: 14px;
 }
 
-/* Scenarios */
-.kawaii-scenarios {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
 
-.scenario-item {
-  background-color: var(--light-color);
-  padding: 10px 15px;
-  border-radius: 50px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.scenario-item:hover {
-  background-color: var(--primary-color);
-  color: white;
-  transform: translateY(-3px);
-}
 
 /* Quiz Styles */
 .draggable-item {
@@ -678,16 +708,14 @@ body {
 
 /* Footer */
 footer {
-  background-color: white;
+  background-color: var(--base-color);
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
   position: absolute;
   bottom: 0;
   width: 100%;
   text-align: center;
-  margin-top: 1rem;
   padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 /* Animations */

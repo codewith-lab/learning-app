@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}Tutorial{% endblock %}
 
 {% block content %}
 <script type = "text/javascript" src = "{{ url_for('static', filename = 'js/scenario.js') }}"></script>
@@ -13,65 +13,92 @@
 
 <div class="scenario-container">
     <div class="scenario-content">
-        <div class="scenario-header">
-            <a href="{{ url_for('tutorial_category', category=prev_category) }}" class="kawaii-button back-button">&lt; Go Back</a>
-            <h2 class="kawaii-title scenario">{{ scenario["title"] }}</h2>
-            <a href="{{ url_for('tutorial_category', category=next_category) }}" class="kawaii-button next-button">&gt; Next</a>
-        </div>
-
-        <div class="kawaii-panel scenario"  
-             style="background-image: url('{{ scenario['env-image'] }}')">
-            <div class="neko-teacher">
-                <img src="{{ url_for('static', filename='images/neko-teacher.png') }}" alt="Neko Teacher" class="neko-teacher-img small">
-                <div class="speech-bubble small">
-                    <div class="speech-bubble-text small">
-                        Hover your mouse over my friend to see where is clickable.
-                        <img src="{{ url_for('static', filename='images/pointer-hover.png') }}" alt="pointer-hover" class="pointer-icon">
-                    </div>
+        
+        <div class="row kawaii-stage">
+            <div class="col-md-2 stage-container">
+                <img src="{{ url_for('static', filename='images/neko-stressed.png') }}" class="stage-icon" alt="stressed">
+                <div class="stage-item {% if scenario['title'] == 'Stressed / Fearful' %}active{% endif %}" 
+                 data-stage="stressed">
+                    Stressed / Fearful
+                </div>
+                <img src="{{ url_for('static', filename='images/neko-sick.png') }}" class="stage-icon" alt="sick">
+                <div class="stage-item {% if scenario['title'] == 'Painful / Sick' %}active{% endif %}" 
+                    data-stage="happy">
+                    Painful / Sick
+                </div>
+                <img src="{{ url_for('static', filename='images/neko-playful.png') }}" class="stage-icon" alt="playful">
+                <div class="stage-item {% if scenario['title'] == 'Curious / Playful' %}active{% endif %}" 
+                    data-stage="curious">
+                    Curious / Playful
+                </div>
+                <img src="{{ url_for('static', filename='images/neko-happy.png') }}" class="stage-icon" alt="happy">
+                <div class="stage-item {% if scenario['title'] == 'Happy / Relaxed' %}active{% endif %}" 
+                    data-stage="painful">
+                    Happy / Relaxed
                 </div>
             </div>
-            <div class="kawaii-body" 
-                 style="background-image: url('{{ url_for('static', filename='images/' + scenario['cat-image']) }}');
-                        top: {{ scenario['image-ctrl']['top'] }};
-                        left: {{ scenario['image-ctrl']['left'] }};
-                        width: {{ scenario['image-ctrl']['width'] }};
-                        height: {{ scenario['image-ctrl']['height'] }};">
-                {% if scenario['ear'] %}
-                    <div class="click-zone ear" 
-                         data-part="ear" 
-                         data-response="{{scenario['ear']}}"
-                         style="top: {{ scenario['positions']['ear']['top'] }}; left: {{ scenario['positions']['ear']['left'] }};"></div>
-                {% endif %}
-                {% if scenario['eye'] %}
-                    <div class="click-zone eye" 
-                         data-part="eye" 
-                         data-response="{{scenario['eye']}}"
-                         style="top: {{ scenario['positions']['eye']['top'] }}; left: {{ scenario['positions']['eye']['left'] }};"></div>
-                {% endif %}
-                {% if scenario['tail'] %}
-                    <div class="click-zone tail"
-                         data-part="tail" 
-                         data-response="{{scenario['tail']}}"
-                         style="top: {{ scenario['positions']['tail']['top'] }}; left: {{ scenario['positions']['tail']['left'] }};"></div>
-                {% endif %}
-                {% if scenario['body'] %}
-                    <div class="click-zone body" 
-                         data-part="body" 
-                         data-response="{{scenario['body']}}"
-                         style="top: {{ scenario['positions']['body']['top'] }}; left: {{ scenario['positions']['body']['left'] }};"></div>
-                {% endif %}
-                {% if scenario['paw'] %}
-                    <div class="click-zone paw" 
-                         data-part="paw" 
-                         data-response="{{scenario['paw']}}"
-                         style="top: {{ scenario['positions']['paw']['top'] }}; left: {{ scenario['positions']['paw']['left'] }};"></div>
-                {% endif %}
-                {% if scenario['sound'] %}
-                    <div class="click-zone sound" 
-                         data-part="sound" 
-                         data-response="{{scenario['sound']}}"
-                         style="top: {{ scenario['positions']['sound']['top'] }}; left: {{ scenario['positions']['sound']['left'] }};"></div>
-                {% endif %}
+
+            <div class="col-md-10 kawaii-panel scenario"  
+                style="background-image: url('{{ scenario['env-image'] }}')">
+                <div class="neko-teacher">
+                    <div class="speech-bubble small">
+                        <div class="speech-bubble-text small">
+                            Hover your mouse over my friend to see where is clickable.
+                            <img src="{{ url_for('static', filename='images/pointer-hover.png') }}" alt="pointer-hover" class="pointer-icon">
+                        </div>
+                    </div>
+                </div>
+                <div class="kawaii-body" 
+                    style="background-image: url('{{ url_for('static', filename='images/' + scenario['cat-image']) }}');
+                            top: {{ scenario['image-ctrl']['top'] }};
+                            left: {{ scenario['image-ctrl']['left'] }};
+                            width: {{ scenario['image-ctrl']['width'] }};
+                            height: {{ scenario['image-ctrl']['height'] }};">
+                    {% if scenario['ear'] %}
+                        <div class="click-zone ear" 
+                            data-part="ear" 
+                            data-response="{{scenario['ear']}}"
+                            style="top: {{ scenario['positions']['ear']['top'] }}; left: {{ scenario['positions']['ear']['left'] }};"></div>
+                    {% endif %}
+                    {% if scenario['eye'] %}
+                        <div class="click-zone eye" 
+                            data-part="eye" 
+                            data-response="{{scenario['eye']}}"
+                            style="top: {{ scenario['positions']['eye']['top'] }}; left: {{ scenario['positions']['eye']['left'] }};"></div>
+                    {% endif %}
+                    {% if scenario['tail'] %}
+                        <div class="click-zone tail"
+                            data-part="tail" 
+                            data-response="{{scenario['tail']}}"
+                            style="top: {{ scenario['positions']['tail']['top'] }}; left: {{ scenario['positions']['tail']['left'] }};"></div>
+                    {% endif %}
+                    {% if scenario['body'] %}
+                        <div class="click-zone body" 
+                            data-part="body" 
+                            data-response="{{scenario['body']}}"
+                            style="top: {{ scenario['positions']['body']['top'] }}; left: {{ scenario['positions']['body']['left'] }};"></div>
+                    {% endif %}
+                    {% if scenario['paw'] %}
+                        <div class="click-zone paw" 
+                            data-part="paw" 
+                            data-response="{{scenario['paw']}}"
+                            style="top: {{ scenario['positions']['paw']['top'] }}; left: {{ scenario['positions']['paw']['left'] }};"></div>
+                    {% endif %}
+                    {% if scenario['sound'] %}
+                        <div class="click-zone sound" 
+                            data-part="sound" 
+                            data-response="{{scenario['sound']}}"
+                            data-sound-files="{{scenario['sound-file']}}"
+                            style="top: {{ scenario['positions']['sound']['top'] }}; left: {{ scenario['positions']['sound']['left'] }};"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="scenario-footer col-md-10">
+                <a href="{{ url_for('tutorial_category', category=prev_category) }}" class="kawaii-button back-button">&lt; Go Back</a>
+                <a href="{{ url_for('tutorial_category', category=next_category) }}" class="kawaii-button next-button">&gt; Next</a>
             </div>
         </div>
     </div>

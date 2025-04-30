@@ -17,22 +17,23 @@ scenarios = {
     "tail": "Hold low to the body, tuck under body, or thrash and thump",
     "body": "Arched back (to look bigger), or crouch low to ground (to hide), grooming more than usual, hide under furniture or in corners",
     "paw": "",
-    "sound": "",
+    "sound": "Hissing (defensive warning), or growling (aggression from fear)",
+    "sound-file": "stressed-hiss.mp3, stressed-growl.mp3",
     "cat-image": "stressed-cat.png",
     "env-image": "https://i5.walmartimages.com/asr/50d6a74d-aedf-4907-ad67-66dc36b251c2.51983cf5dbd54c51ae2be5cc6d40da83.jpeg?odnHeight=640&odnWidth=640&odnBg=FFFFFF",
     "image-ctrl": {
-          "top": "32%",
-          "left": "33%",
-          "width": "30%",
-          "height": "30%"
+          "top": "28%",
+          "left": "43%",
+          "width": "28%",
+          "height": "28%"
         },
     "positions": {
-            "ear": {"top": "28%", "left": "40%"},
-            "eye": {"top": "36%", "left": "44%"},
+            "ear": {"top": "28%", "left": "38%"},
+            "eye": {"top": "36%", "left": "42%"},
             "tail": {"top": "50%", "left": "14%"},
             "body": {"top": "25%", "left": "25%"},
             "paw": {"top": "", "left": ""},
-            "sound": {"top": "", "left": ""},
+            "sound": {"top": "43%", "left": "42%"},
         },
     "next": "2",
     "prev": "begin",
@@ -47,6 +48,7 @@ scenarios = {
     "body": "Stiff and hunched posture, legs tucked, reluctant to move",
     "paw": "",
     "sound": "",
+    "sound-file": "",
     "cat-image": "sick-cat.png",
     "env-image": "https://www.maupets.com/cdn/shop/files/Bao_Modern_Solid_Wood_Cat_Tree_For_Large_Cats_main_1200x.jpg?v=1723223489",
     "image-ctrl": {
@@ -76,6 +78,7 @@ scenarios = {
     "body": "Slight arched back, Slow stalking movements, crouched with butt wiggles, short bursts of running",
     "paw": "Occasional paw bats at objects",
     "sound": "Soft chirps, trills",
+    "sound-file": "playful-chirp.mp3, playful-trill.mp3",
     "cat-image": "playful-cat.png",
     "env-image": "https://www.thespruce.com/thmb/R-M6g-5koC4oSLQ1CeIQ-bsBQVA=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-climbing-shelf-wall-8b636cf12c4347d5a1b71266f42586f8.jpeg",
     "image-ctrl": {
@@ -104,7 +107,8 @@ scenarios = {
     "tail": "Pointed straight up, may sway gently like a metronome",
     "body": "Rolling belly-up, stretching out fully",
     "paw": "Kneading ('making biscuits' with paws)",
-    "sound": "Gentle purring, short and melodic meows",
+    "sound": "Gentle purring",
+    "sound-file": "happy-purr.mp3",
     "cat-image": "happy-cat.png",
     "env-image": "https://www.thespruce.com/thmb/nMb1vvPeJdpvNsZVAiswHhry1iM=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-playroom-1448b64778434eaf88b3dcf2695bde2e.jpeg",
     "image-ctrl": {
