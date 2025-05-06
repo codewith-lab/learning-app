@@ -5,14 +5,14 @@
 {% block content %}
 <div class="container mt-4">
     <div class="card">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header" style="background-color: rgb(254, 237, 222); color: #333333;">
             <h2 class="mb-0 text-center">Quiz Results</h2>
         </div>
         <div class="card-body text-center">
-            <h3>Your Score: {{ score }}/{{ total }}</h3>
+            <h3 style="color: #333333;">Your Score: {{ score }}/{{ total }}</h3>
             <div class="progress my-4">
-                <div class="progress-bar bg-success" role="progressbar" 
-                     style="width: {{ percentage|int }}%" 
+                <div class="progress-bar" role="progressbar" 
+                     style="background-color: #8D7B68; color: white; width: {{ percentage|int }}%" 
                      aria-valuenow="{{ percentage|int }}" 
                      aria-valuemin="0" 
                      aria-valuemax="100">
@@ -22,9 +22,9 @@
             
             {# Use a variable to track if feedback has been shown #}
             {% set feedback_shown = false %}
-            {% for level in quiz.results.feedback_levels %}
+            {% for level in quiz.results.feedback_levels|sort(attribute='min_percentage', reverse=true) %}
                 {% if not feedback_shown and percentage >= level.min_percentage %}
-                    <div class="alert {{ level.style }}">
+                    <div class="alert" style="background-color: rgb(254, 237, 222); color: #333333; border-color: #A4907C;">
                         <h4>{{ level.title }}</h4>
                         <p>{{ level.message }}</p>
                         <div class="mt-3">
@@ -36,23 +36,81 @@
             {% endfor %}
             
             <div class="card mt-4">
-                <div class="card-header">
+                <div class="card-header" style="background-color: rgb(254, 237, 222); color: #333333;">
                     <h4>Key Takeaways</h4>
                 </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush text-start">
+                <div class="card-body" style="background-color: #FFFFFF;">
+                    <div class="list-group list-group-flush text-start">
                         {% for takeaway in quiz.results.key_takeaways %}
-                            <li class="list-group-item">{{ takeaway }}</li>
+                            <div class="list-group-item" style="background-color: #FFFFFF; color: #333333; border-bottom: 1px solid #dee2e6;">
+                                <div class="d-flex">
+                                    <div class="me-3">
+                                        <span class="badge rounded-pill" style="background-color: #8D7B68; font-size: 14px; padding: 8px 12px;">Question {{ loop.index }}</span>
+                                    </div>
+                                    <div>
+                                        {% if loop.index == 1 %}
+                                            <strong>Tail Position:</strong> A happy cat holds its tail <strong>upright with a slight curl</strong> at the tip - this is a sign of confidence and contentment
+                                        {% elif loop.index == 2 %}
+                                            <strong>Ear Position:</strong> <strong>Flattened ears</strong> pressed against the head indicate fear or anger in cats - a clear warning to give them space
+                                        {% elif loop.index == 3 %}
+                                            <strong>Eye Behavior:</strong> Slow blinking is a sign of <strong>trust and affection</strong> (often called "cat kisses") - try blinking slowly back at your cat!
+                                        {% elif loop.index == 4 %}
+                                            <strong>Body Posture:</strong> A crouched position with <strong>dilated pupils</strong> typically indicates stress or fear - this cat needs time to feel safe
+                                        {% elif loop.index == 5 %}
+                                            <strong>Kneading:</strong> Kneading behavior <strong>originates from nursing as kittens</strong> and shows comfort and contentment
+                                        {% else %}
+                                            {{ takeaway }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </ul>
+                    </div>
+                    
+                    <!-- Add feedback summary based on performance -->
+                    <div class="mt-4 p-3 border-top">
+                        <h5>Your Performance Summary:</h5>
+                        <p class="mb-2" style="color: #333333;">
+                            {% if percentage >= 80 %}
+                                You have a <strong>great understanding</strong> of cat body language! You can now recognize <strong>key signals</strong> that show when a cat is <strong>happy, stressed, or afraid</strong>.
+                            {% elif percentage >= 60 %}
+                                You understand the <strong>basics of cat body language</strong>. With practice, you'll become better at recognizing <strong>subtle cues</strong> in their <strong>posture, ears, and tail</strong>.
+                            {% else %}
+                                <strong>Practice makes perfect!</strong> Review these key takeaways to understand the connection between <strong>physical signals</strong> and a cat's <strong>emotional state</strong>.
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
             </div>
             
             <div class="mt-4">
-                <a href="{{ url_for('quiz') }}" class="btn btn-primary me-2">Try Again</a>
-                <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
+                <a href="{{ url_for('quiz') }}" class="btn me-2" style="background-color: rgb(254, 237, 222); color: #333333; border-color: #A4907C;">Try Again</a>
+                <a href="{{ url_for('home') }}" class="btn" style="background-color: #8D7B68; color: white; border-color: #8D7B68;">Back to Home</a>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Hover states for buttons */
+    .btn[style*="background-color: rgb(254, 237, 222)"]:hover {
+        background-color: #A4907C !important;
+        color: white !important;
+    }
+    
+    .btn[style*="background-color: #8D7B68"]:hover {
+        background-color: #6C5F5B !important;
+        color: white !important;
+    }
+    
+    /* List item hover effect */
+    .list-group-item:hover {
+        background-color: rgba(254, 237, 222, 0.7) !important;
+    }
+    
+    /* Badge styling */
+    .badge {
+        font-weight: 600;
+    }
+</style>
 {% endblock %}

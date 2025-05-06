@@ -1,12 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import os
 import json
-import sqlite3
-from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
+# Load scenario data
 scenarios = {
   "1": {
     "id": "1",
@@ -130,59 +129,55 @@ scenarios = {
   },
 }
 
-# Quiz Data Structure
+# Quiz Data Structure - stored as JSON instead of in the database
 quiz_data = {
     "title": "Cat Body Language Quiz",
-    "steps": [
-        {
-            "id": "drag_drop",
-            "type": "drag_drop",
-            "title": "Drag and Drop",
-            "instruction": "Drag each cat image to the correct category based on their body language",
-            "categories": {
-                "positive": {
-                    "title": "Positive/Happy Body Language",
-                    "style": "bg-success"
-                },
-                "negative": {
-                    "title": "Negative/Stressed Body Language",
-                    "style": "bg-danger"
-                }
+    "drag_drop": {
+        "title": "Categorize Cats by Body Language",
+        "categories": {
+            "positive": {
+                "title": "Positive/Happy Body Language",
+                "style": "bg-success"
             },
-            "drag_items": [
-                {
-                    "id": "happy-cat",
-                    "image": "happy-cat.png",
-                    "caption": "Cat with upright tail",
-                    "category": "positive"
-                },
-                {
-                    "id": "stressed-cat",
-                    "image": "stressed-cat.png",
-                    "caption": "Cat with flattened ears",
-                    "category": "negative"
-                },
-                {
-                    "id": "playful-cat",
-                    "image": "playful-cat.png",
-                    "caption": "Cat kneading with paws",
-                    "category": "positive"
-                },
-                {
-                    "id": "sick-cat",
-                    "image": "sick-cat.png",
-                    "caption": "Cat with tail tucked",
-                    "category": "negative"
-                }
-            ],
-            "feedback": {
-                "success": "Great job! You correctly categorized all the cats based on their body language!",
-                "error": "You got {score}/{total} cats correct. Green borders indicate correct placements, red borders indicate incorrect placements."
+            "negative": {
+                "title": "Negative/Stressed Body Language",
+                "style": "bg-danger"
             }
         },
+        "drag_items": [
+            {
+                "id": "happy-cat",
+                "image": "happy-cat.png",
+                "caption": "Cat with upright tail",
+                "category": "positive"
+            },
+            {
+                "id": "stressed-cat",
+                "image": "stressed-cat.png",
+                "caption": "Cat with flattened ears",
+                "category": "negative"
+            },
+            {
+                "id": "playful-cat",
+                "image": "playful-cat.png",
+                "caption": "Cat kneading with paws",
+                "category": "positive"
+            },
+            {
+                "id": "sick-cat",
+                "image": "sick-cat.png",
+                "caption": "Cat with tail tucked",
+                "category": "negative"
+            }
+        ],
+        "feedback": {
+            "success": "Great job! You correctly categorized all the cats based on their body language!",
+            "error": "You got {score}/{total} cats correct. Green borders indicate correct placements, red borders indicate incorrect placements."
+        }
+    },
+    "questions": [
         {
             "id": "q1",
-            "type": "multiple_choice",
             "question": "Which tail position indicates a happy, confident cat?",
             "options": [
                 {"id": "a", "text": "Tucked between legs", "correct": False},
@@ -197,7 +192,6 @@ quiz_data = {
         },
         {
             "id": "q2",
-            "type": "multiple_choice",
             "question": "When a cat's ears are flattened against their head, it usually means:",
             "options": [
                 {"id": "a", "text": "They're happy", "correct": False},
@@ -212,7 +206,6 @@ quiz_data = {
         },
         {
             "id": "q3",
-            "type": "multiple_choice",
             "question": "Slow blinking from a cat is often a sign of:",
             "options": [
                 {"id": "a", "text": "Boredom", "correct": False},
@@ -227,7 +220,6 @@ quiz_data = {
         },
         {
             "id": "q4",
-            "type": "multiple_choice",
             "question": "A cat crouched low to the ground with dilated pupils is likely:",
             "options": [
                 {"id": "a", "text": "Ready to pounce in play", "correct": False},
@@ -242,7 +234,6 @@ quiz_data = {
         },
         {
             "id": "q5",
-            "type": "multiple_choice",
             "question": "Kneading behavior (pushing paws against a soft surface) in cats originates from:",
             "options": [
                 {"id": "a", "text": "Marking territory", "correct": False},
@@ -297,29 +288,28 @@ quiz_data = {
     }
 }
 
-# Database setup
-def get_db_connection():
-    conn = sqlite3.connect('cat_tutorial.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+# Function to save quiz results to JSON file
+def save_quiz_result(user_id, score, total, answers):
+    result = {
+        "user_id": user_id,
+        "score": score,
+        "total": total,
+        "answers": answers,
+        "timestamp": f"{datetime.now()}"
+    }
+    
+    # Create a results directory if it doesn't exist
+    if not os.path.exists('quiz_results'):
+        os.makedirs('quiz_results')
+    
+    # Save to a JSON file with unique filename based on timestamp
+    filename = f"quiz_results/result_{user_id}_{int(datetime.now().timestamp())}.json"
+    with open(filename, 'w') as f:
+        json.dump(result, f, indent=2)
+    
+    return filename
 
-def init_db():
-    conn = get_db_connection()
-    conn.execute('''
-    CREATE TABLE IF NOT EXISTS quiz_results (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id TEXT,
-        score INTEGER,
-        total INTEGER,
-        answers TEXT,
-        timestamp DATETIME
-    )
-    ''')
-    conn.commit()
-    conn.close()
-
-# Initialize database
-init_db()
+from datetime import datetime
 
 @app.route('/')
 def home():
@@ -358,109 +348,202 @@ def tutorial_category(category):
 @app.route('/quiz')
 def quiz():
     # Initialize quiz session
-    session['quiz_answers'] = {}
-    session['current_step'] = 0
     session['quiz_started'] = True
-    session['quiz_score'] = 0
+    session['quiz_answers'] = {}
     
-    # Redirect to the first step of the quiz
-    return redirect(url_for('quiz_step', step_id=quiz_data['steps'][0]['id']))
+    # Redirect to the first step (drag and drop)
+    return redirect(url_for('quiz_step', step='drag_drop'))
 
-@app.route('/quiz/step/<step_id>', methods=['GET'])
-def quiz_step(step_id):
+@app.route('/quiz/step/<step>')
+def quiz_step(step):
     if not session.get('quiz_started', False):
         return redirect(url_for('quiz'))
     
-    # Find current step data
-    current_step = None
-    step_index = 0
-    for i, step in enumerate(quiz_data['steps']):
-        if step['id'] == step_id:
-            current_step = step
-            step_index = i
-            break
+    # Calculate total steps: 1 for drag and drop + number of questions
+    total_steps = 1 + len(quiz_data['questions'])
+    total_possible = len(quiz_data['drag_drop']['drag_items']) + len(quiz_data['questions'])
     
-    if not current_step:
-        return redirect(url_for('quiz'))
+    # Calculate current score from existing answers
+    answers = session.get('quiz_answers', {})
+    current_score = 0
     
-    # Determine next and previous steps
-    next_step = None
-    prev_step = None
-    if step_index < len(quiz_data['steps']) - 1:
-        next_step = quiz_data['steps'][step_index + 1]['id']
-    if step_index > 0:
-        prev_step = quiz_data['steps'][step_index - 1]['id']
+    # Count correct drag and drop items
+    if 'drag_drop' in answers:
+        for item in answers.get('drag_drop', []):
+            if item.get('category') == item.get('correctCategory'):
+                current_score += 1
     
-    # Store current step in session
-    session['current_step'] = step_index
+    # Count correct multiple choice answers
+    for question in quiz_data['questions']:
+        question_id = question['id']
+        if question_id in answers:
+            user_answer = answers.get(question_id)
+            correct_answer = quiz_data['answer_key'].get(question_id)
+            if user_answer == correct_answer:
+                current_score += 1
     
-    # Render appropriate template based on step type
-    if current_step['type'] == 'drag_drop':
-        return render_template('quiz_drag_drop.html', 
-                              quiz=quiz_data, 
-                              step=current_step,
-                              next_step=next_step,
-                              prev_step=prev_step)
-    else:  # multiple_choice
-        return render_template('quiz_question.html', 
-                              quiz=quiz_data, 
-                              step=current_step,
-                              next_step=next_step,
-                              prev_step=prev_step)
+    # Handle drag and drop step
+    if step == 'drag_drop':
+        current_step = 0
+        prev_url = url_for('tutorial_category', category='happy-relaxed')  # Go back to tutorials
+        next_url = url_for('quiz_step', step='q1')  # First question
+        
+        return render_template('quiz_questions/drag_drop.html',
+                              quiz=quiz_data,
+                              current_step=current_step,
+                              total_steps=total_steps,
+                              prev_url=prev_url,
+                              next_url=next_url,
+                              current_score=current_score,
+                              total_possible=total_possible)
+    
+    # Handle question steps
+    else:
+        # Find question index
+        question_index = -1
+        for i, question in enumerate(quiz_data['questions']):
+            if question['id'] == step:
+                question_index = i
+                break
+        
+        # If question not found, redirect to quiz start
+        if question_index == -1:
+            return redirect(url_for('quiz'))
+        
+        # Calculate current step (drag_drop is step 0, first question is step 1)
+        current_step = question_index + 1
+        
+        # Determine prev/next URLs
+        if question_index == 0:
+            prev_url = url_for('quiz_step', step='drag_drop')
+        else:
+            prev_url = url_for('quiz_step', step=quiz_data['questions'][question_index-1]['id'])
+        
+        if question_index == len(quiz_data['questions']) - 1:
+            is_last_question = True
+        else:
+            is_last_question = False
+        
+        return render_template('quiz_questions/quiz_questions.html',
+                              quiz=quiz_data,
+                              question=quiz_data['questions'][question_index],
+                              question_number=question_index + 1,
+                              current_step=current_step,
+                              total_steps=total_steps,
+                              prev_url=prev_url,
+                              is_last_question=is_last_question,
+                              current_score=current_score,
+                              total_possible=total_possible)
 
-@app.route('/quiz/submit_step/<step_id>', methods=['POST'])
-def submit_step(step_id):
+@app.route('/quiz/submit', methods=['POST'])
+def quiz_submit_step():
     if not session.get('quiz_started', False):
         return jsonify({'status': 'error', 'message': 'Quiz not started'})
     
     data = request.get_json()
-    
-    # Store answer in session
     answers = session.get('quiz_answers', {})
-    answers[step_id] = data
+    
+    step_type = data.get('step_type')
+    
+    if step_type == 'drag_drop':
+        # Save drag and drop selections
+        drag_drop_selections = data.get('drag_drop_selections', [])
+        answers['drag_drop'] = drag_drop_selections
+        
+        # Next step is first question
+        next_url = url_for('quiz_step', step=quiz_data['questions'][0]['id'])
+    
+    elif step_type == 'question':
+        # Save question answer
+        question_id = data.get('question_id')
+        selected_option = data.get('selected_option')
+        answers[question_id] = selected_option
+        
+        # Find question index
+        question_index = -1
+        for i, question in enumerate(quiz_data['questions']):
+            if question['id'] == question_id:
+                question_index = i
+                break
+        
+        if question_index == -1:
+            return jsonify({'status': 'error', 'message': 'Invalid question ID'})
+        
+        # If this is the last question, go to results
+        if question_index == len(quiz_data['questions']) - 1:
+            # Calculate score
+            score = calculate_quiz_score(answers)
+            
+            # Save results
+            user_id = session.get('user_id', os.urandom(8).hex())
+            session['user_id'] = user_id
+            save_quiz_result(user_id, score['total_score'], score['possible_score'], answers)
+            
+            # Save to session for results page
+            session['final_score'] = score['total_score']
+            session['final_total'] = score['possible_score']
+            
+            next_url = url_for('quiz_result')
+        else:
+            # Next question
+            next_url = url_for('quiz_step', step=quiz_data['questions'][question_index + 1]['id'])
+    
+    else:
+        return jsonify({'status': 'error', 'message': 'Invalid step type'})
+    
+    # Update session answers
     session['quiz_answers'] = answers
     
-    # Update score if answer is correct
-    if 'is_correct' in data and data['is_correct']:
-        session['quiz_score'] = session.get('quiz_score', 0) + 1
+    return jsonify({
+        'status': 'success',
+        'next_url': next_url
+    })
+
+def calculate_quiz_score(answers):
+    # Score drag and drop section
+    drag_drop_score = 0
+    drag_drop_total = len(quiz_data['drag_drop']['drag_items'])
     
-    # Find next step
-    current_step_index = 0
-    for i, step in enumerate(quiz_data['steps']):
-        if step['id'] == step_id:
-            current_step_index = i
-            break
+    for item in answers.get('drag_drop', []):
+        if item.get('category') == item.get('correctCategory'):
+            drag_drop_score += 1
     
-    # Determine if this is the last step
-    if current_step_index >= len(quiz_data['steps']) - 1:
-        return jsonify({'status': 'success', 'next': url_for('quiz_result')})
-    else:
-        next_step_id = quiz_data['steps'][current_step_index + 1]['id']
-        return jsonify({'status': 'success', 'next': url_for('quiz_step', step_id=next_step_id)})
+    # Score multiple choice questions
+    mc_score = 0
+    mc_total = len(quiz_data['questions'])
+    
+    for question in quiz_data['questions']:
+        question_id = question['id']
+        user_answer = answers.get(question_id)
+        correct_answer = quiz_data['answer_key'].get(question_id)
+        
+        if user_answer == correct_answer:
+            mc_score += 1
+    
+    # Total score
+    total_score = drag_drop_score + mc_score
+    possible_score = drag_drop_total + mc_total
+    
+    return {
+        'drag_drop_score': drag_drop_score,
+        'drag_drop_total': drag_drop_total,
+        'mc_score': mc_score,
+        'mc_total': mc_total,
+        'total_score': total_score,
+        'possible_score': possible_score
+    }
 
 @app.route('/quiz/result')
 def quiz_result():
     if not session.get('quiz_started', False):
         return redirect(url_for('quiz'))
     
-    # Calculate total score
-    all_answers = session.get('quiz_answers', {})
-    total = len(quiz_data['steps'])
-    score = session.get('quiz_score', 0)
+    # Get score from session
+    score = session.get('final_score', 0)
+    total = session.get('final_total', 0)
     
+    # Calculate percentage
     percentage = (score / total * 100) if total > 0 else 0
-    
-    # Save results to database
-    conn = get_db_connection()
-    user_id = session.get('user_id', os.urandom(8).hex())
-    session['user_id'] = user_id
-    
-    conn.execute(
-        'INSERT INTO quiz_results (user_id, score, total, answers, timestamp) VALUES (?, ?, ?, ?, ?)',
-        (user_id, score, total, json.dumps(all_answers), datetime.now())
-    )
-    conn.commit()
-    conn.close()
     
     # Clear quiz session
     session['quiz_started'] = False
