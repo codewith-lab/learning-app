@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import os
 import json
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -288,6 +289,9 @@ quiz_data = {
     }
 }
 
+# Just add this line near the top of main.py with other global variables
+quiz_results = {}  # Dictionary to store quiz results in memory
+
 # Function to save quiz results to JSON file
 def save_quiz_result(user_id, score, total, answers):
     result = {
@@ -298,18 +302,11 @@ def save_quiz_result(user_id, score, total, answers):
         "timestamp": f"{datetime.now()}"
     }
     
-    # Create a results directory if it doesn't exist
-    if not os.path.exists('quiz_results'):
-        os.makedirs('quiz_results')
+    # Store directly in the global dictionary instead of writing to file
+    global quiz_results
+    quiz_results[user_id] = result
     
-    # Save to a JSON file with unique filename based on timestamp
-    filename = f"quiz_results/result_{user_id}_{int(datetime.now().timestamp())}.json"
-    with open(filename, 'w') as f:
-        json.dump(result, f, indent=2)
-    
-    return filename
-
-from datetime import datetime
+    return user_id
 
 @app.route('/')
 def home():
@@ -535,18 +532,16 @@ def calculate_quiz_score(answers):
 
 @app.route('/quiz/result')
 def quiz_result():
-    if not session.get('quiz_started', False):
-        return redirect(url_for('quiz'))
+    # Check for score in session
+    score = session.get('final_score')
+    total = session.get('final_total')
     
-    # Get score from session
-    score = session.get('final_score', 0)
-    total = session.get('final_total', 0)
+    # If we can't find the score, redirect to quiz
+    if score is None or total is None:
+        return redirect(url_for('quiz'))
     
     # Calculate percentage
     percentage = (score / total * 100) if total > 0 else 0
-    
-    # Clear quiz session
-    session['quiz_started'] = False
     
     return render_template('quiz_result.html', 
                           score=score, 
