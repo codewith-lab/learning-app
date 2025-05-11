@@ -322,7 +322,7 @@ def tutorial_category(category):
     global scenarios, tutorial_progress
 
     if category == 'end':
-        return redirect(url_for('quiz'))
+        return redirect(url_for('connect'))
     if category == 'begin':
         return render_template('index.html')
 
@@ -583,6 +583,9 @@ def quiz_result():
                           percentage=percentage,
                           quiz=quiz_data)
 
+@app.route('/connect')
+def connect():
+    return render_template('connect.html')
 
 if __name__ == '__main__':
    app.run(debug = True, port = 5002)

@@ -162,7 +162,7 @@ body {
   height: auto;
 
   margin-bottom: -8rem;
-  margin-left: -2.5rem;
+  margin-left: -3rem;
 }
 
 .kawaii-card-link {
@@ -432,7 +432,7 @@ body {
 
   font-family: var(--font-family);
   font-size: 0.8rem;
-  background: var(--warning-color);
+  background: rgb(228, 128, 128);
   color: white;
   cursor: pointer;
   transition: background .3s, color .3s;

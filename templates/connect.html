@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Ready to Quiz?{% endblock %}
+
+{% block content %}
+<div class="quiz-start-container text-center">
+    <div class="hero-section">
+        <h1 class="kawaii-title">You're All Set!</h1>
+        <h2 class="kawaii-subtitle">Think you've mastered Cat Body Language?</h2>
+        <p class="kawaii-description">Let's see what you've learned. Click below to begin the quiz!</p>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <a href="{{ url_for('quiz') }}" class="kawaii-card-link">
+            <img src="{{ url_for('static', filename='images/neko-happy.png') }}" class="kawaii-card-icon" alt="happy/relaxed">
+            <div class="kawaii-card">
+                <h1 class="font-color-black" style="color: black;">Start <br>Quiz</h1>
+            </div> 
+        </a>
+    </div>
+
+</div>
+{% endblock %}
