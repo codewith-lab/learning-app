@@ -457,7 +457,6 @@ ul.kawaii-unfinished li {
   background: rgb(228, 128, 128);
   color: white;
   cursor: pointer;
-  transition: background .3s, color .3s;
 }
 
 .click-zone::after {

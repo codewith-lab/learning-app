@@ -50,10 +50,10 @@
                 <div class="card-header" style="background-color: #ffecdf; color: #333333;">
                     <h4>Key Takeaways</h4>
                 </div>
-                <div class="card-body" style="background-color: #FFFFFF;">
+                <div class="card-body" style="background-color: #fffdf6;">
                     <div class="list-group list-group-flush text-start">
                         {% for takeaway in quiz.results.key_takeaways %}
-                            <div class="list-group-item" style="background-color: #FFFFFF; color: #333333; border-bottom: 1px solid #dee2e6;">
+                            <div class="list-group-item" style="background-color: #fffdf6; color: #333333; border-bottom: 1px solid #dee2e6;">
                                 <div class="d-flex">
                                     <div class="me-3">
                                         <span class="badge rounded-pill" style="background-color: darkgrey; font-size: 14px; padding: 8px 12px;">Question {{ loop.index }}</span>
@@ -103,6 +103,11 @@
 </div>
 
 <style>
+    .card,
+    .card-body {
+    background-color: transparent !important;
+    }
+
     /* Hover states for buttons */
     .btn[style*="background-color: #ffecdf"]:hover {
         background-color: darkgrey !important;
