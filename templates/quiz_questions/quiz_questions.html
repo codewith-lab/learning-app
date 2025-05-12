@@ -7,7 +7,7 @@
     <h2 class="mb-4 text-center">{{ quiz.title }}</h2>
     
     <div class="progress mb-3">
-        <div class="progress-bar" role="progressbar" style="background-color: #8D7B68; color: white; width: {{ (current_step / total_steps) * 100 }}%;" 
+        <div class="progress-bar" role="progressbar" style="background-color: darkgrey; color: white; width: {{ (current_step / total_steps) * 100 }}%;" 
              aria-valuenow="{{ current_step + 1 }}" aria-valuemin="0" aria-valuemax="{{ total_steps }}">
             Step {{ current_step + 1 }} of {{ total_steps }}
         </div>
@@ -15,7 +15,7 @@
     
     <!-- Add this just below the progress bar -->
     <div class="d-flex justify-content-end mb-2">
-        <div class="score-tracker px-3 py-1 rounded" style="background-color: #8D7B68; color: white;">
+        <div class="score-tracker px-3 py-1 rounded" style="background-color: darkgrey; color: white;">
             <strong>Score:</strong> <span>{{ current_score|default(0) }}/{{ total_possible|default(quiz.drag_drop.drag_items|length + quiz.questions|length) }}</span>
         </div>
     </div>
@@ -47,8 +47,8 @@
             
             <div class="mt-4 d-flex justify-content-between">
                 <button id="prevBtn" class="btn btn-outline-primary">Previous</button>
-                <button id="checkBtn" class="btn" style="background-color: rgb(254, 237, 222); color: #6C6C6C; border-color: #A4907C;">Check Answer</button>
-                <button id="nextBtn" class="btn d-none" style="background-color: rgb(254, 237, 222); color: #6C6C6C; border-color: #A4907C;">
+                <button id="checkBtn" class="btn" style="background-color: #ffecdf; color: #6C6C6C; border-color: darkgrey;">Check Answer</button>
+                <button id="nextBtn" class="btn d-none" style="background-color: #ffecdf; color: #6C6C6C; border-color: darkgrey;">
                     {% if is_last_question %}Finish Quiz{% else %}Next{% endif %}
                 </button>
             </div>
@@ -67,7 +67,7 @@ body, h1, h2, h3, h4, h5, h6, p, div, label {
     padding: 10px;
     border-radius: 5px;
     transition: all 0.2s ease;
-    background-color: rgb(254, 237, 222); /* Peachy/cream background */
+    border: 1px solid lightgrey; /* Medium tan */
     margin-bottom: 10px;
 }
 
@@ -96,23 +96,23 @@ body, h1, h2, h3, h4, h5, h6, p, div, label {
 
 /* Button hover states */
 #checkBtn:hover, #nextBtn:hover {
-    background-color: #A4907C !important; /* Medium tan */
+    background-color: darkgrey !important; /* Medium tan */
     color: white !important;
 }
 
 #prevBtn {
     color: #6C6C6C; /* Grey text */
-    border-color: #A4907C;
+    border-color: darkgrey;
 }
 
 #prevBtn:hover {
-    background-color: #A4907C;
+    background-color: darkgrey;
     color: white;
 }
 
 /* Card styling */
 .card-header {
-    background-color: rgb(254, 237, 222); /* Peachy/cream */
+    background-color: #ffecdf;
     color: #6C6C6C; /* Grey text */
 }
 
@@ -131,6 +131,12 @@ body, h1, h2, h3, h4, h5, h6, p, div, label {
     background-color: transparent;
     border: none;
     color: #000000; /* Black text */
+}
+
+.alert.alert-warning {
+    background-color: lightgrey;
+    border-color: darkgrey;
+    color: #6C6C6C; /* Grey text */
 }
 </style>
 

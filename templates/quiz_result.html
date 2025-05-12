@@ -5,14 +5,14 @@
 {% block content %}
 <div class="container mt-4">
     <div class="card">
-        <div class="card-header" style="background-color: rgb(254, 237, 222); color: #333333;">
+        <div class="card-header" style="background-color: #ffecdf; color: #333333;">
             <h2 class="mb-0 text-center">Quiz Results</h2>
         </div>
         <div class="card-body text-center">
-            <h3 style="color: #333333;">Your Score: {{ score }}/{{ total }}</h3>
+            <h3 style="color: darkgrey;">Your Score: {{ score }}/{{ total }}</h3>
             <div class="progress my-4">
                 <div class="progress-bar" role="progressbar" 
-                     style="background-color: #8D7B68; color: white; width: {{ percentage|int }}%" 
+                     style="background-color: darkgrey; color: white; width: {{ percentage|int }}%" 
                      aria-valuenow="{{ percentage|int }}" 
                      aria-valuemin="0" 
                      aria-valuemax="100">
@@ -21,7 +21,7 @@
             </div>
             
             {# Show only one feedback based on score #}
-            <div class="alert" style="background-color: rgb(254, 237, 222); color: #333333; border-color: #A4907C;">
+            <div class="alert" style="color: #333333; border-color: darkgrey;">
                 {% if percentage >= 80 %}
                     {% set highest_level = quiz.results.feedback_levels|selectattr('min_percentage', '<=', 100)|selectattr('min_percentage', '>=', 80)|first %}
                     <h4>{{ highest_level.title }}</h4>
@@ -47,7 +47,7 @@
             </div>
             
             <div class="card mt-4">
-                <div class="card-header" style="background-color: rgb(254, 237, 222); color: #333333;">
+                <div class="card-header" style="background-color: #ffecdf; color: #333333;">
                     <h4>Key Takeaways</h4>
                 </div>
                 <div class="card-body" style="background-color: #FFFFFF;">
@@ -56,7 +56,7 @@
                             <div class="list-group-item" style="background-color: #FFFFFF; color: #333333; border-bottom: 1px solid #dee2e6;">
                                 <div class="d-flex">
                                     <div class="me-3">
-                                        <span class="badge rounded-pill" style="background-color: #8D7B68; font-size: 14px; padding: 8px 12px;">Question {{ loop.index }}</span>
+                                        <span class="badge rounded-pill" style="background-color: darkgrey; font-size: 14px; padding: 8px 12px;">Question {{ loop.index }}</span>
                                     </div>
                                     <div>
                                         {% if loop.index == 1 %}
@@ -95,8 +95,8 @@
             </div>
             
             <div class="mt-4">
-                <a href="{{ url_for('quiz') }}" class="btn me-2" style="background-color: rgb(254, 237, 222); color: #333333; border-color: #A4907C;">Try Again</a>
-                <a href="{{ url_for('home') }}" class="btn" style="background-color: #8D7B68; color: white; border-color: #8D7B68;">Back to Home</a>
+                <a href="{{ url_for('quiz') }}" class="btn me-2" style="background-color: #ffecdf; color: #333333; border-color: darkgrey;">Try Again</a>
+                <a href="{{ url_for('home') }}" class="btn" style="background-color: darkgrey; color: white; border-color: darkgrey;">Back to Home</a>
             </div>
         </div>
     </div>
@@ -104,19 +104,19 @@
 
 <style>
     /* Hover states for buttons */
-    .btn[style*="background-color: rgb(254, 237, 222)"]:hover {
-        background-color: #A4907C !important;
+    .btn[style*="background-color: #ffecdf"]:hover {
+        background-color: darkgrey !important;
         color: white !important;
     }
     
-    .btn[style*="background-color: #8D7B68"]:hover {
+    .btn[style*="background-color: darkgrey"]:hover {
         background-color: #6C5F5B !important;
         color: white !important;
     }
     
     /* List item hover effect */
     .list-group-item:hover {
-        background-color: rgba(254, 237, 222, 0.7) !important;
+        background-color:#ffecdf !important;
     }
     
     /* Badge styling */

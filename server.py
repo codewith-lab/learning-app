@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import os
 from datetime import datetime
@@ -6,7 +7,28 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # Track user status
-tutorial_progress = {}
+tutorial_progress = {
+    "stressed-fearful": {
+        'explored_parts': [],
+        'explored_sounds': [],
+        'finished': False
+    },
+    "painful-sick": {
+        'explored_parts': [],
+        'explored_sounds': [],
+        'finished': False
+    },
+    "curious-playful": {
+        'explored_parts': [],
+        'explored_sounds': [],
+        'finished': False
+    },
+    "happy-relaxed": {
+        'explored_parts': [],
+        'explored_sounds': [],
+        'finished': False
+    },
+}
 quiz_results = {}  
 
 # Load scenario data
@@ -320,7 +342,7 @@ def tutorial_category(category):
     global scenarios, tutorial_progress
 
     if category == 'end':
-        return redirect(url_for('connect'))
+        return redirect(url_for('quiz_start'))
     if category == 'begin':
         return render_template('index.html')
 
@@ -581,9 +603,17 @@ def quiz_result():
                           percentage=percentage,
                           quiz=quiz_data)
 
-@app.route('/connect')
-def connect():
-    return render_template('connect.html')
+@app.route('/quiz/start')
+def quiz_start():
+    global tutorial_progress
+    all_finished = all(category['finished'] for category in tutorial_progress.values())
+    unfinished_cat = list( filter(
+        lambda category: not tutorial_progress[category]['finished'],
+        tutorial_progress ))
+
+    return render_template('quiz_start.html',
+                           all_finished=all_finished,
+                           unfinished_cat=unfinished_cat)
 
 if __name__ == '__main__':
    app.run(debug = True, port = 5002)

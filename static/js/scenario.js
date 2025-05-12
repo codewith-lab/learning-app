@@ -103,7 +103,7 @@ function buildResponse(part, bodyLanguage, soundFilesData) {
 
 // Function to play sound
 function playSound(icon, soundFile) {
-    // If same icon clicked again, stop playback
+    // If same icon clicked again or other body parts are clicked, stop playback
     if (currentSound && icon.is(currentIcon)) {
         currentSound.pause();
         currentSound.currentTime = 0;
@@ -112,6 +112,14 @@ function playSound(icon, soundFile) {
         return;
     }
 
+    $(document).on('click', 'button, a.kawaii-button, .other-clickable', function(e){
+        // if this click wasn’t on .sound-icon, stop the audio
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          currentAudio = null;
+        }
+    });
     // Stop any existing audio
     if (currentSound) {
         currentSound.pause();
@@ -146,20 +154,37 @@ function playSound(icon, soundFile) {
         clickZones.filter('[data-part="sound"]').addClass('explored');
         warning.addClass('inactive').empty();
         updateProgress();
-    }
+    };
+
+    $(document).on('click', 'button, a.kawaii-button, .click-zone', function(e) {
+        if (!currentSound) return;
+
+        currentSound.pause();
+        currentSound.currentTime = 0;
+        if (currentIcon) {
+          currentIcon.css('transform','scale(1)').text('🎵');
+        }
+    });
 }
 
 // Function to update progress
 function updateProgress() {
     let existProg = bubbleText.find('.progress-message');
     let prog = calcProgress();
+    let finishedSet = new Set(finished_sessions || []);
     let newProg; 
     
     if (exploredParts.size == totalParts) {
+        finishedSet.add(category);
         newProg = `<div class="progress-message">${prog}&nbsp;&nbsp;Click <span class="kawaii-behavior-highlight">next</span> to continue</div>`;
-        nextButton.addClass('scale');
+        //nextButton.addClass('scale');
         warning.empty();
         $('.stage-item').filter(`[data-stage="${category}"]`).addClass('completed');
+
+        if (finishedSet.size === 4) {
+            $('.stage-start-quiz').html(`
+            <a href="/quiz/start" class="kawaii-button start-button"> Go To Quiz</a>`)
+        }
     } else {
         newProg = `<div class="progress-message">${prog}</div>`;
     }

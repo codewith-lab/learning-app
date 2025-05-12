@@ -8,7 +8,7 @@
     
     <div class="progress mb-3">
         <div class="progress-bar" role="progressbar" 
-             style="background-color: #8D7B68; color: white; width: {{ (current_step / total_steps) * 100 }}%;" 
+             style="background-color: darkgrey; color: white; width: {{ (current_step / total_steps) * 100 }}%;" 
              aria-valuenow="{{ current_step + 1 }}" aria-valuemin="0" aria-valuemax="{{ total_steps }}">
             Step {{ current_step + 1 }} of {{ total_steps }}
         </div>
@@ -16,7 +16,7 @@
     
     <!-- Add this just below the progress bar -->
     <div class="d-flex justify-content-end mb-2">
-        <div class="score-tracker px-3 py-1 rounded" style="background-color: #8D7B68; color: white;">
+        <div class="score-tracker px-3 py-1 rounded" style="background-color: darkgrey; color: white;">
             <strong>Score:</strong> <span>{{ current_score|default(0) }}/{{ total_possible|default(quiz.drag_drop.drag_items|length + quiz.questions|length) }}</span>
         </div>
     </div>
@@ -31,7 +31,7 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="card h-100">
-                        <div class="card-header" style="background-color: rgb(254, 237, 222); color: #6C5F5B;">
+                        <div class="card-header" style="background-color: #ffecdf; color: #6C5F5B;">
                             <h5 class="mb-0">{{ quiz.drag_drop.categories.positive.title }}</h5>
                         </div>
                         <div class="card-body dropzone" id="positive-dropzone">
@@ -41,7 +41,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card h-100">
-                        <div class="card-header" style="background-color: rgb(254, 237, 222); color: #6C5F5B;">
+                        <div class="card-header" style="background-color: #ffecdf; color: #6C5F5B;">
                             <h5 class="mb-0">{{ quiz.drag_drop.categories.negative.title }}</h5>
                         </div>
                         <div class="card-body dropzone" id="negative-dropzone">
@@ -88,7 +88,7 @@ body, h1, h2, h3, h4, h5, h6, p, div {
 /* Drag and Drop Styles */
 .draggable-item {
     cursor: grab;
-    background-color: rgb(254, 237, 222); /* Light peachy/cream */
+    background-color:#ffecdf;
     border: 1px solid #D8D9DA; /* Medium grey */
     border-radius: 8px;
     margin-bottom: 10px;
@@ -105,7 +105,7 @@ body, h1, h2, h3, h4, h5, h6, p, div {
 
 .draggable-item.dragging {
     opacity: 0.5;
-    border: 2px dashed #8D7B68; /* Dark brown */
+    border: 2px dashed darkgrey;; /* Dark brown */
 }
 
 .cat-image {
@@ -133,12 +133,12 @@ body, h1, h2, h3, h4, h5, h6, p, div {
     align-content: flex-start;
     padding: 15px;
     transition: all 0.3s ease;
-    background-color: rgb(254, 237, 222); /* Light peachy/cream */
+    background-color: #ffecdf;
 }
 
 .dropzone.hover {
-    background-color: rgba(254, 237, 222, 0.7); /* Lighter peachy/cream */
-    border-color: #8D7B68; /* Dark brown */
+    background-color: #ffecdf;
+    border-color: darkgrey;; /* Dark brown */
 }
 
 .dropzone-placeholder {
@@ -180,42 +180,42 @@ body, h1, h2, h3, h4, h5, h6, p, div {
 
 /* Button colors */
 #checkBtn {
-    background-color: rgb(254, 237, 222); /* Peachy/cream */
-    border-color: #A4907C;
+    background-color:#ffecdf;
+    border-color: darkgrey;;
     color: #6C6C6C; /* Grey text */
 }
 
 #checkBtn:hover {
-    background-color: #A4907C; /* Medium tan */
-    border-color: #A4907C;
+    background-color: darkgrey;; /* Medium tan */
+    border-color: darkgrey;;
     color: white;
 }
 
 #nextBtn {
-    background-color: rgb(254, 237, 222); /* Peachy/cream */
-    border-color: #A4907C;
+    background-color: #ffecdf;
+    border-color: darkgrey;;
     color: #6C6C6C; /* Grey text */
 }
 
 #nextBtn:hover {
-    background-color: #A4907C; /* Medium tan */
-    border-color: #A4907C;
+    background-color: darkgrey;; /* Medium tan */
+    border-color: darkgrey;;
     color: white;
 }
 
 #prevBtn {
     color: #6C6C6C; /* Grey text */
-    border-color: #A4907C;
+    border-color: darkgrey;;
 }
 
 #prevBtn:hover {
-    background-color: #8D7B68; /* Dark brown */
+    background-color: darkgrey;; /* Dark brown */
     color: white;
 }
 
 /* Set navbar to peachy/cream color */
 .navbar, .navbar-expand-lg, .navbar-light, .bg-light {
-    background-color: rgb(254, 237, 222) !important;
+    background-color: #ffecdf !important;
 }
 
 /* Make navbar links slightly darker for better contrast */
@@ -225,6 +225,12 @@ body, h1, h2, h3, h4, h5, h6, p, div {
 
 .navbar-light .navbar-brand {
     color: #6C5F5B;
+}
+
+.alert.alert-warning {
+    background-color: lightgrey;
+    border-color: darkgrey;
+    color: #6C6C6C; /* Grey text */
 }
 </style>
 

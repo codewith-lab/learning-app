@@ -181,6 +181,16 @@ body {
   text-align: center;
 }
 
+ul.kawaii-unfinished {
+  list-style: none;
+  margin-top: 2rem;
+}
+
+ul.kawaii-unfinished li {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
 /* Start Badge */
 .start-badge {
   position: relative;
@@ -269,6 +279,13 @@ body {
   transform: translateY(-3px);
   box-shadow: 0 7px 14px rgba(78, 205, 196, 0.3);
   color: white;
+}
+
+.start-button{
+  animation: scale 0.5s infinite alternate ease-in-out;
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  margin-left: 15rem;
 }
 
 .next-button,
@@ -361,6 +378,11 @@ body {
 
 .stage-item.active::before {
   background: var(--accent-color);
+}
+
+.stage-start-quiz {
+  margin-top: 2rem;
+  margin-left: 1rem;
 }
 
 .kawaii-panel {
@@ -593,6 +615,13 @@ body {
   margin-left: -2%;
   text-align: left;
   font-size: 0.9rem;
+}
+
+.speech-bubble-text.medium {
+  margin-left: -2%;
+  text-align: left;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .speech-bubble-text.warning {

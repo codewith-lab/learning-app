@@ -97,8 +97,9 @@
         <div class="row">
             <div class="col-md-2"></div>
             <div class="scenario-footer col-md-10">
-                <a href="{{ url_for('tutorial_category', category=prev_category) }}" class="kawaii-button back-button">&lt; Go Back</a>
-                <a href="{{ url_for('tutorial_category', category=next_category) }}" class="kawaii-button next-button">&gt; Next</a>
+                <a href="{{ url_for('tutorial_category', category=prev_category) }}" class="kawaii-button back-button"> &larr; Go Back</a>
+                <div class="scenario-footer col-md-10 stage-start-quiz"></div>
+                <a href="{{ url_for('tutorial_category', category=next_category) }}" class="kawaii-button next-button"> Next &rarr;</a>
             </div>
         </div>
     </div>
