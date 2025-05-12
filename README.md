@@ -8,14 +8,19 @@ In order for this to run you need to install the requirements. This can simply b
 Run the following commands in sequential order.
 
 Create virtual environment:
-python -m venv env
+**python -m venv env**
 
 Activate virtual environment:
-source env/bin/activate
+**source env/bin/activate**
 
 Install requirements:
-pip install -r requirements.txt
+**pip install -r requirements.txt**
+
+run program:
+**python server.py**
 
 After that, running server.py will run the program on http://127.0.0.1:5000 (the ending port may differ depending on what ports you have available)
+
+Note: if you have python3 then must use "python3" instead of "python"
 
 
