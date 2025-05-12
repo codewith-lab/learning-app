@@ -1,10 +1,10 @@
 ## Learning-App
 User Interface Design Final project
 
-### Clone the Repo
+### 1. Clone the Repo
 git clone https://github.com/codewith-lab/learning-app
 
-### Install Dependencies
+### 2. Install Dependencies
 #### create virtual environment
 python -m venv env
 
@@ -14,7 +14,7 @@ source env/bin/activate
 #### install requirements
 pip install -r requirements.txt
 
-### Run the Program
+### 3. Run the Program
 ### Start server 
 python3 server.py
 
