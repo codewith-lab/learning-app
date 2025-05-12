@@ -1,26 +1,27 @@
-# learning-app
+# Learning-App
 User Interface Design Final project
 
-In order for this to run you need to install the requirements. This can simply be done by running 
+## Clone the Repo
+git clone https://github.com/codewith-lab/learning-app
 
-"pip install -r requirements.txt" in the root folder. However I believe with new Mac Os updates you might have to do that thru a virtual environment. See below! 
+## Install Dependencies
+### create virtual environment
+python -m venv env
 
-Run the following commands in sequential order.
+### activate virtual environment
+source env/bin/activate
 
-Create virtual environment:
-**python -m venv env**
+### install requirements
+pip install -r requirements.txt
 
-Activate virtual environment:
-**source env/bin/activate**
+## Run the Program
+### Start server 
+python3 server.py
 
-Install requirements:
-**pip install -r requirements.txt**
+### Open in Web
+http://127.0.0.1:5002 
+Note: the ending port may differ depending on what ports you have available
 
-run program:
-**python server.py**
 
-After that, running server.py will run the program on http://127.0.0.1:5000 (the ending port may differ depending on what ports you have available)
-
-Note: if you have python3 then must use "python3" instead of "python"
 
 
