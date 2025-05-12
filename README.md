@@ -16,6 +16,11 @@ Activate virtual environment:
 Install requirements:
 **pip install -r requirements.txt**
 
+run program:
+**python server.py**
+
 After that, running server.py will run the program on http://127.0.0.1:5000 (the ending port may differ depending on what ports you have available)
+
+Note: if you have python3 then must use "python3" instead of "python"
 
 
