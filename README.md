@@ -10,7 +10,7 @@ Run the following commands in sequential order.
 Create virtual environment:
 python -m venv env
 
-Activate virtual env:
+Activate virtual environment:
 source env/bin/activate
 
 Install requirements:
