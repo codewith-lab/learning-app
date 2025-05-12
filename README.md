@@ -1,24 +1,24 @@
-# Learning-App
+## Learning-App
 User Interface Design Final project
 
-## Clone the Repo
+### Clone the Repo
 git clone https://github.com/codewith-lab/learning-app
 
-## Install Dependencies
-### create virtual environment
+### Install Dependencies
+#### create virtual environment
 python -m venv env
 
-### activate virtual environment
+#### activate virtual environment
 source env/bin/activate
 
-### install requirements
+#### install requirements
 pip install -r requirements.txt
 
-## Run the Program
+### Run the Program
 ### Start server 
 python3 server.py
 
-### Open in Web
+#### Open in Web
 http://127.0.0.1:5002 
 Note: the ending port may differ depending on what ports you have available
 
