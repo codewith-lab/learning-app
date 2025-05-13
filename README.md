@@ -16,6 +16,8 @@ python3 server.py
 
 Then open http://127.0.0.1:5002 Note: the ending port may differ depending on what ports you have available
 
+Note: your system maybe on python not python3 in that case please switch out python3 for python
+
 
 
 
